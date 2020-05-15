@@ -1,11 +1,12 @@
 # Where Do You Want To Eat v2
 
-*(I don't care, where do you want to eat?)*
+_(I don't care, where do you want to eat?)_
 
 ## First, A Little History
+
 Several years ago, I built a little website [Where Do You Want To Eat?](https://wheredoyouwanttoeat.xyz). It was a simple little app that tied into Google's Geolocation API to find a restaurant near you, or by a specified Zip Code for you to eat at. It randomly chose it to help friends or couples choose their next meal.
 
-Google changed their API and started charging for it (which is completely fair, I'm not going to complain.). But because the site had no revenue and there'd be the chance for a spike of usage jacking up the API costs, I opted to scuttle it. You can still view the [GitHub Repository](https://github.com/kpwags/Where-Do-You-Want-To-Eat).
+Google changed their API and started charging for it (which is completely fair, I'm not going to complain.). But because the site had no revenue and since there'd be the chance for a spike of usage jacking up the API costs, I opted to sunset it. You can still view the [GitHub Repository](https://github.com/kpwags/Where-Do-You-Want-To-Eat).
 
 ## What This Is
 

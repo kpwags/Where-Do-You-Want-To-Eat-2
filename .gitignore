@@ -27,3 +27,5 @@ app.db
 **/appsettings.development.json
 **/appsettings.staging.json
 **/appsettings.production.json
+*.db-shm
+*.db-wal

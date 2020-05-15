@@ -23,7 +23,14 @@ namespace wheredoyouwanttoeat2.Controllers
             return View();
         }
 
+        [Route("privacy-policy")]
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [Route("about")]
+        public IActionResult About()
         {
             return View();
         }

@@ -16,7 +16,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-dark bg-primary navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" style="background-color:#0366d6 !important">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Where Do You Want to Eat?</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -37,12 +37,13 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - Where Do You Want to Eat?
-            <div class="pull-right">
-                <ul class="list-inline">
-                    <li><a href="https://kpwags.com">Keith Wagner</a></li>
+            <div class="float-left">&copy; 2020 - Where Do You Want to Eat?</div>
+            <div class="float-right">
+                <ul>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a href="https://github.com/kpwags/Where-Do-You-Want-To-Eat-2">GitHub</a></li>
-                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
                 </ul>
             </div>
         </div>

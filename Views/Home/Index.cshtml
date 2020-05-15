@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
+@inject SignInManager<User> SignInManager
 
 @if (SignInManager.IsSignedIn(User))
 {
@@ -14,7 +14,7 @@ else
         <h1 class="display-4">Welcome</h1>
         <p>If you are anything like my wife and I, you sometimes have issues deciding where you want to go to eat. It happens to the best of us.
             You want Tacos, your best friend wants a burger, someone else wants Sushi...and someone still hasn't come up with a restaurant that serves all 3.</p>
-        <p>That's what this little web app aims to help with. Rather than let one of you choose...leave it up to a machine to choose for you.</p>
+        <p class="pb-3">That's what this little web app aims to help with. Rather than let one of you choose...leave it up to a machine to choose for you.</p>
         <h2>How This Works</h2>
         <p>The way the app works is pretty simple. When you sign up, you will need to add a bunch of restaurants that are in your area. For each restaurant, you can assign
             them tags. That way, you can use the tags to help narrow down, or exclude options from the decision. From then on, every time you come to the site, you will then just need
