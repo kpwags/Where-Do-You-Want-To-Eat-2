@@ -11,10 +11,12 @@ namespace wheredoyouwanttoeat2.Models
         [StringLength(255)]
         public string Name { get; set; }
 
+        [Display(Name = "Address Line 1")]
         [StringLength(255)]
         public string AddressLine1 { get; set; }
 
         [StringLength(255)]
+        [Display(Name = "Address Line 2")]
         public string AddressLine2 { get; set; }
 
         [StringLength(255)]
@@ -24,6 +26,7 @@ namespace wheredoyouwanttoeat2.Models
         public string State { get; set; }
 
         [StringLength(10)]
+        [Display(Name = "Zip Code")]
         public string ZipCode { get; set; }
 
         public string UserId { get; set; }

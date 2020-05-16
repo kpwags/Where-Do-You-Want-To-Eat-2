@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using wheredoyouwanttoeat2.Models;
+using wheredoyouwanttoeat2.Data;
 
 namespace wheredoyouwanttoeat2.Controllers
 {

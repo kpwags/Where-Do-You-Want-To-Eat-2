@@ -1,0 +1,27 @@
+@model List<Restaurant>
+@{
+    ViewData["Title"] = "Restaurants";
+}
+
+<div class="container">
+    <h1 class="display-4">Restaurants</h1>
+    <table class="table table-striped mt-5">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">&nbsp;</th>
+                <th scope="col">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var restaurant in Model)
+            {
+                <tr>
+                    <td>@restaurant.Name</td>
+                    <td>Edit</td>
+                    <td>Delete</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
