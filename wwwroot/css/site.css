@@ -94,6 +94,6 @@ header ul li {
 .tag {
     background-color: #0366d6;
     color: #f8f9fa;
-    padding: 4px;
+    padding: 4px 8px;
     border-radius: 5px;
 }

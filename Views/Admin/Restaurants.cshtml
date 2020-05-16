@@ -21,7 +21,7 @@
             {
                 <tr>
                     <td>@restaurant.Name</td>
-                    <td><a class="btn btn-primary" href="#" role="button">Edit</a></td>
+                    <td><a class="btn btn-primary" asp-controller="Admin" asp-action="EditRestaurant" asp-route-id="@restaurant.RestaurantId" role="button">Edit</a></td>
                     <td><a class="btn btn-danger" href="#" role="button">Delete</a></td>
                 </tr>
             }

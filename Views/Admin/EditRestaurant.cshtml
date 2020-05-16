@@ -1,6 +1,6 @@
 @model wheredoyouwanttoeat2.Models.Restaurant
 @{
-    ViewData["Title"] = "Add a Restaurant";
+    ViewData["Title"] = $"Edit {Model.Name}";
 }
 @section Styles {
     <link rel="stylesheet" href="~/lib/bootstrap-tagsinput/bootstrap-tagsinput.css" />
@@ -12,8 +12,11 @@
 
 <div class="row">
     <div class="col-md-6 mx-auto mt-3">
-        <h2>Add a Restaurant</h2>
-        <form asp-action="AddRestaurant" asp-controller="admin">
+        <h2>Edit @Model.Name</h2>
+        <form asp-action="EditRestaurant" asp-controller="admin">
+            @* ID *@
+            <input type="hidden" asp-for="RestaurantId" />
+
             @* Name *@
             <div class="form-group">
                 <label asp-for="Name"></label>
@@ -111,7 +114,7 @@
                 <small id="tagHep" class="form-text text-muted">Separate tags with commas</small>
             </div>
 
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
 </div>
