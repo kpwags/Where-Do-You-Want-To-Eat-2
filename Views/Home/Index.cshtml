@@ -1,8 +1,24 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>You are logged in!</p>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>If you are anything like my wife and I, you sometimes have issues deciding where you want to go to eat. It happens to the best of us.
+            You want Tacos, your best friend wants a burger, someone else wants Sushi...and someone still hasn't come up with a restaurant that serves all 3.</p>
+        <p class="pb-3">That's what this little web app aims to help with. Rather than let one of you choose...leave it up to a machine to choose for you.</p>
+        <h2>How This Works</h2>
+        <p>The way the app works is pretty simple. When you sign up, you will need to add a bunch of restaurants that are in your area. For each restaurant, you can assign
+            them tags. That way, you can use the tags to help narrow down, or exclude options from the decision. From then on, every time you come to the site, you will then just need
+            to narrow down your tags, click a button, and the app will tell you where you should go eat!</p>
+        <p>Besides...once you let the machine choose, you might realize what you really want...</p>
+    </div>
+}
