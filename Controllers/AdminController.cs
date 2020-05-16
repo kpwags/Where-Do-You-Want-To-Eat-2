@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace wheredoyouwanttoeat2.Controllers
 {
@@ -40,11 +41,14 @@ namespace wheredoyouwanttoeat2.Controllers
         }
 
         [HttpPost]
+        [Route("/admin/add-restaurant")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddRestaurant(Restaurant model)
         {
             if (ModelState.IsValid)
             {
+                var loggedInUser = await GetCurrentUserAsync();
+
                 var restaurant = new Restaurant
                 {
                     Name = model.Name,
@@ -52,7 +56,9 @@ namespace wheredoyouwanttoeat2.Controllers
                     AddressLine2 = model.AddressLine2,
                     City = model.City,
                     State = model.State,
-                    ZipCode = model.ZipCode
+                    ZipCode = model.ZipCode,
+                    User = loggedInUser,
+                    UserId = loggedInUser.Id
                 };
 
                 _db.Restaurants.Add(restaurant);
