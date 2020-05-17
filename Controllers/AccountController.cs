@@ -21,8 +21,7 @@ namespace wheredoyouwanttoeat2.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(ViewModel.RegisterViewModel model)
         {
             if (ModelState.IsValid)
