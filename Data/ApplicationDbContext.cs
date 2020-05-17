@@ -23,6 +23,17 @@ namespace wheredoyouwanttoeat2.Data
                 .HasOne(c => c.User)
                 .WithMany(t => t.Restaurants);
 
+            // TODO: Figure this out (GitHub Issue #6)
+            // modelBuilder.Entity<Restaurant>()
+            //     .HasMany<Tag>(r => r.Tags)
+            //     .WithMany(t => t.Restaurants)
+            //     .Map(rt =>
+            //         {
+            //             rt.MapLeftKey("RestaurantId");
+            //             rt.MapRightKey("TagId");
+            //             rt.ToTable("RestaurantTag");
+            //         });
+
             modelBuilder.Entity<RestaurantTag>()
                 .HasKey(rt => new { rt.RestaurantId, rt.TagId });
 

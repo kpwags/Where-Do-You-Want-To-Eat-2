@@ -32,6 +32,19 @@ namespace wheredoyouwanttoeat2.Controllers
         {
             var loggedInUser = await GetCurrentUserAsync();
             var model = _db.Restaurants.Where(r => r.UserId == loggedInUser.Id).OrderBy(r => r.Name).ToList();
+
+            foreach (var restaurant in model)
+            {
+                if (restaurant.RestaurantTags == null)
+                {
+                    restaurant.TagString = string.Join(", ", _db.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).Select(rt => rt.Tag.Name).ToList());
+                }
+                else
+                {
+                    restaurant.TagString = string.Join(", ", restaurant.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).Select(rt => rt.Tag.Name).ToList());
+                }
+            }
+
             return View(model);
         }
 
@@ -64,31 +77,34 @@ namespace wheredoyouwanttoeat2.Controllers
                 _db.Restaurants.Add(restaurant);
                 await _db.SaveChangesAsync();
 
-                foreach (string tag in model.Tags.Split(',').ToList())
+                if (model.TagString != null && model.TagString.Trim().Length > 0)
                 {
-                    var dbTag = _db.Tags.Where(t => t.Name.ToLower() == tag.ToLower()).FirstOrDefault();
-                    if (dbTag == null)
+                    foreach (string tag in model.TagString.Split(',').ToList())
                     {
-                        // tag does not exist, add it
-                        dbTag = new Tag
+                        var dbTag = _db.Tags.Where(t => t.Name.ToLower() == tag.ToLower()).FirstOrDefault();
+                        if (dbTag == null)
                         {
-                            Name = tag.Trim().ToLower()
-                        };
+                            // tag does not exist, add it
+                            dbTag = new Tag
+                            {
+                                Name = tag.Trim().ToLower()
+                            };
 
-                        _db.Tags.Add(dbTag);
+                            _db.Tags.Add(dbTag);
+                            await _db.SaveChangesAsync();
+                        }
+
+                        // create the restaurant-tag link
+                        var restaurantTag = new RestaurantTag
+                        {
+                            Restaurant = restaurant,
+                            RestaurantId = restaurant.RestaurantId,
+                            Tag = dbTag,
+                            TagId = dbTag.TagId
+                        };
+                        _db.RestaurantTags.Add(restaurantTag);
                         await _db.SaveChangesAsync();
                     }
-
-                    // create the restaurant-tag link
-                    var restaurantTag = new RestaurantTag
-                    {
-                        Restaurant = restaurant,
-                        RestaurantId = restaurant.RestaurantId,
-                        Tag = dbTag,
-                        TagId = dbTag.TagId
-                    };
-                    _db.RestaurantTags.Add(restaurantTag);
-                    await _db.SaveChangesAsync();
                 }
 
                 return RedirectToAction("Restaurants", "Admin");
@@ -105,7 +121,7 @@ namespace wheredoyouwanttoeat2.Controllers
             if (restaurant != null)
             {
                 List<string> tags = _db.RestaurantTags.Where(rt => rt.RestaurantId == id).Select(rt => rt.Tag.Name).ToList();
-                restaurant.Tags = string.Join(',', tags);
+                restaurant.TagString = string.Join(',', tags);
 
                 return View(restaurant);
             }
@@ -124,7 +140,7 @@ namespace wheredoyouwanttoeat2.Controllers
                 var restaurant = _db.Restaurants.Where(r => r.RestaurantId == model.RestaurantId).FirstOrDefault();
 
                 // first, let's handle the tags
-                List<string> restaurantTags = Utilities.CorrectUserEnteredTags(model.Tags);
+                List<string> restaurantTags = Utilities.CorrectUserEnteredTags(model.TagString);
                 foreach (string tag in restaurantTags)
                 {
                     var dbTag = _db.Tags.Where(t => t.Name.ToLower() == tag.ToLower()).FirstOrDefault();
@@ -215,6 +231,66 @@ namespace wheredoyouwanttoeat2.Controllers
 
             return View(model);
         }
+
+        [Route("/admin/delete-restaurant/{id:int}")]
+        public IActionResult DeleteRestaurant(int id)
+        {
+            var restaurant = _db.Restaurants.Where(r => r.RestaurantId == id).FirstOrDefault();
+
+            if (restaurant != null)
+            {
+                return View(restaurant);
+            }
+            else
+            {
+                return RedirectToAction("Restaurants");
+            }
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        [Route("/admin/delete-restaurant/{id:int}")]
+        public async Task<IActionResult> DeleteRestaurant(Restaurant model)
+        {
+            var restaurant = _db.Restaurants.Where(r => r.RestaurantId == model.RestaurantId).FirstOrDefault();
+
+            List<RestaurantTag> restaurantTags = _db.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).ToList();
+            List<int> tagIds = new List<int>();
+            foreach (RestaurantTag restaurantTag in restaurantTags)
+            {
+                // save to list for possible cleanup
+                tagIds.Add(restaurantTag.TagId);
+
+                _db.RestaurantTags.Remove(restaurantTag);
+                await _db.SaveChangesAsync();
+            }
+
+            List<int> tagsToDelete = new List<int>();
+            foreach (int tagId in tagIds)
+            {
+                if (_db.RestaurantTags.Where(rt => rt.TagId == tagId).Count() == 0)
+                {
+                    // it's not used anywhere else, let's delete it to keep the database cleaner
+                    tagsToDelete.Add(tagId);
+                }
+            }
+
+            // delete unused tags
+            foreach (int tagId in tagsToDelete)
+            {
+                var tagToDelete = _db.Tags.Where(t => t.TagId == tagId).FirstOrDefault();
+                if (tagToDelete != null)
+                {
+                    _db.Tags.Remove(tagToDelete);
+                    await _db.SaveChangesAsync();
+                }
+            }
+
+            _db.Restaurants.Remove(restaurant);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Restaurants");
+        }
+
         private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

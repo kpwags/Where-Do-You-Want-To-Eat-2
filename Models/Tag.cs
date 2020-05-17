@@ -11,6 +11,8 @@ namespace wheredoyouwanttoeat2.Models
         [StringLength(50)]
         public string Name { get; set; }
 
+        //public List<Restaurant> Restaurants { get; set; }
+
         public List<RestaurantTag> RestaurantTags { get; set; }
     }
 }

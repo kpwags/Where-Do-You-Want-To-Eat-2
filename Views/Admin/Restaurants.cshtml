@@ -11,7 +11,8 @@
     <table class="table table-striped mt-4">
         <thead>
             <tr>
-                <th scope="col">Name</th>
+                <th scope="col" width="50%">Name</th>
+                <th scope="col" width="30%">Tags</th>
                 <th scope="col" width="10%">&nbsp;</th>
                 <th scope="col" width="10%">&nbsp;</th>
             </tr>
@@ -21,8 +22,9 @@
             {
                 <tr>
                     <td>@restaurant.Name</td>
+                    <td>@restaurant.TagString</td>
                     <td><a class="btn btn-primary" asp-controller="Admin" asp-action="EditRestaurant" asp-route-id="@restaurant.RestaurantId" role="button">Edit</a></td>
-                    <td><a class="btn btn-danger" href="#" role="button">Delete</a></td>
+                    <td><a class="btn btn-danger" asp-controller="Admin" asp-action="DeleteRestaurant" asp-route-id="@restaurant.RestaurantId" role="button">Delete</a></td>
                 </tr>
             }
         </tbody>

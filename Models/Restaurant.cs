@@ -35,7 +35,9 @@ namespace wheredoyouwanttoeat2.Models
 
         public List<RestaurantTag> RestaurantTags { get; set; }
 
+        //public List<Tag> Tags { get; set; }
+
         [NotMapped]
-        public string Tags { get; set; }
+        public string TagString { get; set; }
     }
 }
