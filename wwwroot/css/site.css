@@ -97,3 +97,7 @@ header ul li {
     padding: 4px 8px;
     border-radius: 5px;
 }
+
+form.randomizer label.form-check-label {
+    font-size: 1.2rem;
+}

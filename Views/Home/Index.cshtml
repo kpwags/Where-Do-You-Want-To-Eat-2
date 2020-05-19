@@ -1,11 +1,33 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@model List<Tag>
 @inject SignInManager<User> SignInManager
 
 @if (SignInManager.IsSignedIn(User))
 {
     <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>You are logged in!</p>
+        <div class="row">
+            <div class="col-md-6 mx-auto mt-3">
+                <h1 class="display-4">Where to Eat?</h1>
+
+                <form asp-action="Choose" class="randomizer mt-5">
+                    <input type="submit" value="Choosed Where to Eat!" class="btn btn-primary" />
+
+                        <div class="row mt-5">
+                            @foreach (Tag tag in Model)
+                            {
+                                <div class="col-3 mt-4 mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@tag.TagId" id="tag_@(tag.TagId)" checked>
+                                        <label class="form-check-label" for="tag_@(tag.TagId)">
+                                            @tag.Name
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                </form>
+            </div>
+        </div>
     </div>
 }
 else
