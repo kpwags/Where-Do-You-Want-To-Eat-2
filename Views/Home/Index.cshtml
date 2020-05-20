@@ -1,32 +1,50 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model List<Tag>
+@model wheredoyouwanttoeat2.ViewModel.ChooserViewModel
 @inject SignInManager<User> SignInManager
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="text-center">
-        <div class="row">
-            <div class="col-md-6 mx-auto mt-3">
-                <h1 class="display-4">Where to Eat?</h1>
+    <div class="row">
+        <div class="col-md-12 mx-auto mt-3">
+            @if (Model.SelectedRestaurant != null)
+            {
+                <div class="jumbotron">
+                    <p class="lead">@Model.LeadingText</p>
 
-                <form asp-action="Choose" class="randomizer mt-5">
-                    <input type="submit" value="Choosed Where to Eat!" class="btn btn-primary" />
+                    @if (Model.ChoiceCount <= 20)
+                    {
+                        <h1 class="display-4">@(Model.SelectedRestaurant.Name)</h1>
 
-                        <div class="row mt-5">
-                            @foreach (Tag tag in Model)
-                            {
-                                <div class="col-3 mt-4 mb-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="@tag.TagId" id="tag_@(tag.TagId)" checked>
-                                        <label class="form-check-label" for="tag_@(tag.TagId)">
-                                            @tag.Name
-                                        </label>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                </form>
-            </div>
+                        @if (Model.ChoiceCount <= 4)
+                        {
+                            <p class="lead">Looks like a good choice!</p>
+                        }
+
+                        <hr class="my-4">
+
+                        @if (Model.SelectedRestaurant.AddressLine1 != "" && Model.SelectedRestaurant.AddressLine1 != null)
+                        {
+                            <p>
+                                <strong>Address</strong><br/>
+                                @(Model.SelectedRestaurant.AddressLine1)<br/>
+                                @if (Model.SelectedRestaurant.AddressLine2 != "" && Model.SelectedRestaurant.AddressLine2 != null)
+                                {
+                                    @(Model.SelectedRestaurant.AddressLine2)<br/>
+                                }
+                                @(Model.SelectedRestaurant.City), @(Model.SelectedRestaurant.State) @(Model.SelectedRestaurant.ZipCode)
+                            </p>
+                            <hr class="my-4" />
+                        }
+
+                        <partial name="_RandomizerForm" model="Model"/>
+                    }
+                </div>
+            }
+            else
+            {
+                <h1 class="display-4 text-center">Where to Eat?</h1>
+                <partial name="_RandomizerForm" model="Model"/>
+            }
         </div>
     </div>
 }

@@ -1,0 +1,24 @@
+@model wheredoyouwanttoeat2.ViewModel.ChooserViewModel
+
+<form asp-action="Index" class="randomizer mt-5">
+    <div class="text-center">
+        <input type="submit" value="@Model.ButtonText" class="btn btn-lg btn-primary" />
+    </div>
+    <div class="row mt-5">
+        @for (int i = 0; i < Model.Tags.Count; i++)
+        {
+            <div class="col-2 mt-4 mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" asp-for="@Model.Tags[i].Selected"  />
+                    <label class="form-check-label" asp-for="@Model.Tags[i].Selected">@Model.Tags[i].Name</label>
+                    <input type="hidden" asp-for="@Model.Tags[i].TagId" />
+                    <input type="hidden" asp-for="@Model.Tags[i].Name" />
+                </div>
+            </div>
+        }
+    </div>
+    <div class="text-center mt-3">
+        <button class="btn btn-sm btn-success mr-2" id="selectall" type="button">Select All</button>
+        <button class="btn btn-sm btn-danger" id="selectnone" type="button">Select None</button>
+    </div>
+</form>

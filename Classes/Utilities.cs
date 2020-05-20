@@ -20,5 +20,30 @@ namespace wheredoyouwanttoeat2.Classes
 
             return correctedTags;
         }
+
+        public static List<string> TooManyChoices = new List<string>
+        {
+            "You really need another place to go? Okay, fine! You're going to...",
+            "That wasn't good enough? Okay, sure...you're going to...",
+            "That place looked pretty good...but I guess you can go to...",
+            "Really? Okay...you're going to...",
+            "You should choose soon...you're going to..."
+        };
+
+        public static List<string> WayTooManyChoices = new List<string>
+        {
+            "Oh for Pete's sake...just go to",
+            "For crying out loud...just go to",
+            "You're going to go hungry if you keep this up...go to",
+            "Hunger's looking better all the time, huh? Go to",
+            "I got nothing...just go to"
+        };
+
+        public static List<string> WayWayTooManyChoices = new List<string>
+        {
+            "I give up...just go make yourself a bowl of cereal.",
+            "You're impossible to work with...make a peanut butter & jelly sandwich.",
+            "I guess you're just going to have to go hungry."
+        };
     }
 }

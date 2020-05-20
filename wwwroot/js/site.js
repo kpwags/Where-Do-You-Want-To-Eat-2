@@ -2,3 +2,13 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+$(document).ready(function () {
+    $('#selectall').click(function () {
+        $('input:checkbox').attr('checked', 'checked');
+    });
+
+    $('#selectnone').click(function () {
+        $('input:checkbox').removeAttr('checked');
+    });
+});

@@ -14,5 +14,8 @@ namespace wheredoyouwanttoeat2.Models
         //public List<Restaurant> Restaurants { get; set; }
 
         public List<RestaurantTag> RestaurantTags { get; set; }
+
+        [NotMapped]
+        public bool Selected { get; set; } = true;
     }
 }
