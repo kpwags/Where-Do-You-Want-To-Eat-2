@@ -1,0 +1,58 @@
+@model wheredoyouwanttoeat2.Models.Restaurant
+
+@if (Model.HasInformation)
+{
+    <div class="row">
+        <div class="col">
+            @if (Model.AddressLine1 != null && Model.AddressLine1 != "")
+            {
+                <p>
+                    <strong>Address</strong><br/>
+                    @(Model.AddressLine1)<br/>
+                    @if (Model.AddressLine2 != "" && Model.AddressLine2 != null)
+                    {
+                        @(Model.AddressLine2)<br/>
+                    }
+                    @(Model.City), @(Model.State) @(Model.ZipCode)
+                </p>
+            }
+
+            @if (Model.PhoneNumber != "" && Model.PhoneNumber != null)
+            {
+                <p><strong>Phone Number:</strong> @(Model.PhoneNumber)</p>
+            }
+
+            @if (Model.Website != "" && Model.Website != null)
+            {
+                <p><strong>Website:</strong> <a href="@(Model.Website)">@(Model.Website)</a></p>
+            }
+
+            @if (Model.Menu != "" && Model.Menu != null)
+            {
+                <p><strong>Menu:</strong> <a href="@(Model.Menu)">@(Model.Menu)</a></p>
+            }
+        </div>
+
+        @if (Model.Latitude > 0 && Model.Longitude > 0)
+        {
+            <div class="col">
+                <div id="restaurantmap"></div>
+            </div>
+
+            <script type="text/javascript">
+                const restaurantMap = L.map('restaurantmap').setView([40.1329524, -75.5229275], 15);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(restaurantMap);
+
+                L.marker([40.1329524, -75.5229275]).addTo(restaurantMap)
+                    .bindPopup('@Model.Name')
+                    .openPopup();
+            </script>
+        }
+
+    </div>
+
+    <hr class="my-4" />
+}

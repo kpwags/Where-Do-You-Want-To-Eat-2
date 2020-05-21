@@ -6,11 +6,9 @@ namespace wheredoyouwanttoeat2.Models
     public class RestaurantTag
     {
         public int RestaurantId { get; set; }
+        public virtual Restaurant Restaurant { get; set; }
 
         public int TagId { get; set; }
-
-        public Restaurant Restaurant { get; set; }
-
-        public Tag Tag { get; set; }
+        public virtual Tag Tag { get; set; }
     }
 }

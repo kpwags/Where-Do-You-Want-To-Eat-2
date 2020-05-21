@@ -6,6 +6,7 @@ using wheredoyouwanttoeat2.Classes;
 using wheredoyouwanttoeat2.Data;
 using wheredoyouwanttoeat2.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace wheredoyouwanttoeat2.Controllers
     [Authorize]
     public class AdminController : BaseController
     {
-        public AdminController(UserManager<User> manager, ApplicationDbContext dbContext) : base(manager, dbContext)
+        public AdminController(UserManager<User> manager, ApplicationDbContext dbContext, IConfiguration configuration) : base(manager, dbContext, configuration)
         {
 
         }
@@ -29,14 +30,8 @@ namespace wheredoyouwanttoeat2.Controllers
 
             foreach (var restaurant in model)
             {
-                if (restaurant.RestaurantTags == null)
-                {
-                    restaurant.TagString = string.Join(", ", _db.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).Select(rt => rt.Tag.Name).ToList());
-                }
-                else
-                {
-                    restaurant.TagString = string.Join(", ", restaurant.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).Select(rt => rt.Tag.Name).ToList());
-                }
+
+                restaurant.TagString = string.Join(", ", restaurant.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).Select(rt => rt.Tag.Name).ToList());
             }
 
             return View(model);
@@ -64,12 +59,30 @@ namespace wheredoyouwanttoeat2.Controllers
                     City = model.City,
                     State = model.State,
                     ZipCode = model.ZipCode,
+                    PhoneNumber = model.PhoneNumber,
+                    Website = model.Website,
+                    Menu = model.Menu,
+                    Latitude = 0,
+                    Longitude = 0,
                     User = loggedInUser,
                     UserId = loggedInUser.Id
                 };
 
                 _db.Restaurants.Add(restaurant);
                 await _db.SaveChangesAsync();
+
+                // if a full address was entered, get the latitude and longitude
+                // this is for displaying the map on the details page...I'm making the call on the server so the calls to Mapquest's API is limited to restaurant updates
+                if (restaurant.HasFullAddress)
+                {
+                    LatLong coordinates = await Utilities.GetLatitudeAndLongitudeForAddress(_settings.MapQuestAPIKey, restaurant);
+
+                    restaurant.Latitude = coordinates.Latitude;
+                    restaurant.Longitude = coordinates.Longitude;
+
+                    _db.Restaurants.Update(restaurant);
+                    await _db.SaveChangesAsync();
+                }
 
                 if (model.TagString != null && model.TagString.Trim().Length > 0)
                 {
@@ -209,6 +222,8 @@ namespace wheredoyouwanttoeat2.Controllers
                     }
                 }
 
+                bool hasAddressChanged = Restaurant.HasAddressChanged(restaurant, model);
+
                 // now that the tags are cleaned up, let's update the restaurant
                 restaurant.Name = model.Name;
                 restaurant.AddressLine1 = model.AddressLine1;
@@ -216,6 +231,16 @@ namespace wheredoyouwanttoeat2.Controllers
                 restaurant.City = model.City;
                 restaurant.State = model.State;
                 restaurant.ZipCode = model.ZipCode;
+                restaurant.PhoneNumber = model.PhoneNumber;
+                restaurant.Website = model.Website;
+                restaurant.Menu = model.Menu;
+
+                if (hasAddressChanged)
+                {
+                    var coordinates = await Utilities.GetLatitudeAndLongitudeForAddress(_settings.MapQuestAPIKey, restaurant);
+                    restaurant.Latitude = coordinates.Latitude;
+                    restaurant.Longitude = coordinates.Longitude;
+                }
 
                 _db.Update(restaurant);
                 await _db.SaveChangesAsync();

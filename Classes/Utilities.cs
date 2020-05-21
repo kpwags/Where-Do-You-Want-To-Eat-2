@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using wheredoyouwanttoeat2.Models;
 
 namespace wheredoyouwanttoeat2.Classes
 {
@@ -19,6 +21,16 @@ namespace wheredoyouwanttoeat2.Classes
             }
 
             return correctedTags;
+        }
+
+        public static async Task<LatLong> GetLatitudeAndLongitudeForAddress(string apiKey, Restaurant restaurant)
+        {
+            decimal latitude = 0;
+            decimal longitude = 0;
+
+
+
+            return new LatLong(latitude, longitude);
         }
 
         public static List<string> TooManyChoices = new List<string>

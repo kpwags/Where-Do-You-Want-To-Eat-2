@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using wheredoyouwanttoeat2.ViewModel;
 using wheredoyouwanttoeat2.Models;
 using wheredoyouwanttoeat2.Data;
@@ -13,7 +14,7 @@ namespace wheredoyouwanttoeat2.Controllers
 {
     public class HomeController : BaseController
     {
-        public HomeController(UserManager<User> manager, ApplicationDbContext dbContext) : base(manager, dbContext)
+        public HomeController(UserManager<User> manager, ApplicationDbContext dbContext, IConfiguration configuration) : base(manager, dbContext, configuration)
         {
 
         }

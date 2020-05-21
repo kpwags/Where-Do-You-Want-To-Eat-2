@@ -30,14 +30,67 @@ namespace wheredoyouwanttoeat2.Models
         [Display(Name = "Zip Code")]
         public string ZipCode { get; set; }
 
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
+
+        [Display(Name = "Website")]
+        public string Website { get; set; }
+
+        [Display(Name = "Menu")]
+        public string Menu { get; set; }
+
+        public decimal Latitude { get; set; }
+
+        public decimal Longitude { get; set; }
+
         public string UserId { get; set; }
         public virtual User User { get; set; }
 
-        public List<RestaurantTag> RestaurantTags { get; set; }
-
-        //public List<Tag> Tags { get; set; }
+        public virtual List<RestaurantTag> RestaurantTags { get; set; }
 
         [NotMapped]
         public string TagString { get; set; }
+
+        [NotMapped]
+        public bool HasInformation
+        {
+            get
+            {
+                if ((AddressLine1 != null && AddressLine1 != "") || (PhoneNumber != null && PhoneNumber != "") || (Website != null && Website != "") || (Menu != null && Menu != ""))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        [NotMapped]
+        public bool HasFullAddress
+        {
+            get
+            {
+                if ((AddressLine1 != null && AddressLine1 != "") || (City != null && City != "") || (State != null && State != "") || (ZipCode != null && ZipCode != ""))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public static bool HasAddressChanged(Restaurant restaurant1, Restaurant restaurant2)
+        {
+            if (restaurant1.AddressLine1 == restaurant2.AddressLine1 &&
+                    restaurant1.AddressLine2 == restaurant2.AddressLine2 &&
+                    restaurant1.City == restaurant2.City &&
+                    restaurant1.State == restaurant2.State &&
+                    restaurant1.ZipCode == restaurant2.ZipCode)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
