@@ -14,17 +14,11 @@ using System;
 namespace wheredoyouwanttoeat2.Controllers
 {
     [Authorize]
-    public class AdminController : Controller
+    public class AdminController : BaseController
     {
-        private readonly ILogger<AdminController> _logger;
-        private ApplicationDbContext _db;
-        private readonly UserManager<User> _userManager;
-
-        public AdminController(UserManager<User> manager, ILogger<AdminController> logger, ApplicationDbContext dbContext)
+        public AdminController(UserManager<User> manager, ApplicationDbContext dbContext) : base(manager, dbContext)
         {
-            _userManager = manager;
-            _logger = logger;
-            _db = dbContext;
+
         }
 
         [Route("/admin/restaurants")]
@@ -290,7 +284,5 @@ namespace wheredoyouwanttoeat2.Controllers
 
             return RedirectToAction("Restaurants");
         }
-
-        private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

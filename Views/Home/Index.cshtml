@@ -1,11 +1,51 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@model wheredoyouwanttoeat2.ViewModel.ChooserViewModel
 @inject SignInManager<User> SignInManager
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>You are logged in!</p>
+    <div class="row">
+        <div class="col-md-12 mx-auto mt-3">
+            @if (Model.SelectedRestaurant != null)
+            {
+                <div class="jumbotron">
+                    <p class="lead">@Model.LeadingText</p>
+
+                    @if (Model.ChoiceCount <= 20)
+                    {
+                        <h1 class="display-4">@(Model.SelectedRestaurant.Name)</h1>
+
+                        @if (Model.ChoiceCount <= 4)
+                        {
+                            <p class="lead">Looks like a good choice!</p>
+                        }
+
+                        <hr class="my-4">
+
+                        @if (Model.SelectedRestaurant.AddressLine1 != "" && Model.SelectedRestaurant.AddressLine1 != null)
+                        {
+                            <p>
+                                <strong>Address</strong><br/>
+                                @(Model.SelectedRestaurant.AddressLine1)<br/>
+                                @if (Model.SelectedRestaurant.AddressLine2 != "" && Model.SelectedRestaurant.AddressLine2 != null)
+                                {
+                                    @(Model.SelectedRestaurant.AddressLine2)<br/>
+                                }
+                                @(Model.SelectedRestaurant.City), @(Model.SelectedRestaurant.State) @(Model.SelectedRestaurant.ZipCode)
+                            </p>
+                            <hr class="my-4" />
+                        }
+
+                        <partial name="_RandomizerForm" model="Model"/>
+                    }
+                </div>
+            }
+            else
+            {
+                <h1 class="display-4 text-center">Where to Eat?</h1>
+                <partial name="_RandomizerForm" model="Model"/>
+            }
+        </div>
     </div>
 }
 else
