@@ -31,22 +31,24 @@
             {
                 <p><strong>Menu:</strong> <a href="@(Model.Menu)">@(Model.Menu)</a></p>
             }
+
+            <p>Latitude/Longitude: @Model.Latitude, @Model.Longitude</p>
         </div>
 
-        @if (Model.Latitude > 0 && Model.Longitude > 0)
+        @if (Model.Latitude != 0 && Model.Longitude != 0)
         {
             <div class="col">
                 <div id="restaurantmap"></div>
             </div>
 
             <script type="text/javascript">
-                const restaurantMap = L.map('restaurantmap').setView([40.1329524, -75.5229275], 15);
+                const restaurantMap = L.map('restaurantmap').setView([@Model.Latitude, @Model.Longitude], 15);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(restaurantMap);
 
-                L.marker([40.1329524, -75.5229275]).addTo(restaurantMap)
+                L.marker([@Model.Latitude, @Model.Longitude]).addTo(restaurantMap)
                     .bindPopup('@Model.Name')
                     .openPopup();
             </script>

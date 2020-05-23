@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using wheredoyouwanttoeat2.Models;
+using System;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace wheredoyouwanttoeat2.Classes
 {
@@ -23,12 +25,31 @@ namespace wheredoyouwanttoeat2.Classes
             return correctedTags;
         }
 
-        public static async Task<LatLong> GetLatitudeAndLongitudeForAddress(string apiKey, Restaurant restaurant)
+        public static async Task<LatLong> GetLatitudeAndLongitudeForAddress(string apiKey, string address)
         {
+            Console.WriteLine("MapQuest API Called");
             decimal latitude = 0;
             decimal longitude = 0;
 
+            string mapQuestUrl = $"http://www.mapquestapi.com/geocoding/v1/address?key={apiKey}&location={address}";
 
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(mapQuestUrl))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    var mapQuestResponse = JsonSerializer.Deserialize<MapQuestResponse>(apiResponse);
+
+                    if (mapQuestResponse.results.Count > 0)
+                    {
+                        if (mapQuestResponse.results[0].locations.Count > 0)
+                        {
+                            latitude = mapQuestResponse.results[0].locations[0].displayLatLng.lat;
+                            longitude = mapQuestResponse.results[0].locations[0].displayLatLng.lng;
+                        }
+                    }
+                }
+            }
 
             return new LatLong(latitude, longitude);
         }

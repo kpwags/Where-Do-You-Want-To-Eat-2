@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace wheredoyouwanttoeat2.Models
 {
@@ -76,6 +77,25 @@ namespace wheredoyouwanttoeat2.Models
                 }
 
                 return false;
+            }
+        }
+
+        [NotMapped]
+        public string FullAddress
+        {
+            get
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.Append($"{AddressLine1} ");
+
+                if (AddressLine2 != "" && AddressLine2 != null)
+                {
+                    builder.Append($"{AddressLine1} ");
+                }
+
+                builder.Append($"{City}, {State} {ZipCode}");
+
+                return builder.ToString();
             }
         }
 
