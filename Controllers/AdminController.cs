@@ -126,8 +126,7 @@ namespace wheredoyouwanttoeat2.Controllers
 
             if (restaurant != null)
             {
-                List<string> tags = _db.RestaurantTags.Where(rt => rt.RestaurantId == id).Select(rt => rt.Tag.Name).ToList();
-                restaurant.TagString = string.Join(',', tags);
+                restaurant.TagString = string.Join(',', _db.RestaurantTags.Where(rt => rt.RestaurantId == id).Select(rt => rt.Tag.Name).ToList());
 
                 return View(restaurant);
             }
