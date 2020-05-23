@@ -2,6 +2,19 @@
 @model wheredoyouwanttoeat2.ViewModel.ChooserViewModel
 @inject SignInManager<User> SignInManager
 
+@section Styles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>
+}
+
+@section Scripts {
+
+}
+
 @if (SignInManager.IsSignedIn(User))
 {
     <div class="row">
@@ -22,19 +35,7 @@
 
                         <hr class="my-4">
 
-                        @if (Model.SelectedRestaurant.AddressLine1 != "" && Model.SelectedRestaurant.AddressLine1 != null)
-                        {
-                            <p>
-                                <strong>Address</strong><br/>
-                                @(Model.SelectedRestaurant.AddressLine1)<br/>
-                                @if (Model.SelectedRestaurant.AddressLine2 != "" && Model.SelectedRestaurant.AddressLine2 != null)
-                                {
-                                    @(Model.SelectedRestaurant.AddressLine2)<br/>
-                                }
-                                @(Model.SelectedRestaurant.City), @(Model.SelectedRestaurant.State) @(Model.SelectedRestaurant.ZipCode)
-                            </p>
-                            <hr class="my-4" />
-                        }
+                        <partial name="_RestaurantInfo" model="@Model.SelectedRestaurant" />
 
                         <partial name="_RandomizerForm" model="Model"/>
                     }

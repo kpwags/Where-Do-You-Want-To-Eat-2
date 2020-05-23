@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using wheredoyouwanttoeat2.Models;
 using wheredoyouwanttoeat2.Data;
+using wheredoyouwanttoeat2.Classes;
 
 namespace wheredoyouwanttoeat2.Controllers
 {

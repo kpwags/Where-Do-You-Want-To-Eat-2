@@ -114,3 +114,9 @@ form.randomizer input[type='checkbox'] {
 form.randomizer .form-check {
     line-height: 1;
 }
+
+/* Sticky footer styles
+-------------------------------------------------- */
+#restaurantmap {
+    height: 400px;
+}

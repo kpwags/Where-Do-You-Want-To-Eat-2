@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wheredoyouwanttoeat2.Data;
 
 namespace wheredoyouwanttoeat2.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200521144655_AddPhoneNumber")]
+    partial class AddPhoneNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,12 +163,6 @@ namespace wheredoyouwanttoeat2.Data.Migrations
                     b.Property<string>("City")
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
-
-                    b.Property<decimal>("Latitude")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Menu")
                         .HasColumnType("TEXT");

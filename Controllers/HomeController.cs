@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using wheredoyouwanttoeat2.ViewModel;
 using wheredoyouwanttoeat2.Models;
 using wheredoyouwanttoeat2.Data;
@@ -33,8 +34,7 @@ namespace wheredoyouwanttoeat2.Controllers
             {
                 TempData["choice_count"] = 0;
 
-                var tagIds = _db.RestaurantTags.Where(rt => rt.Restaurant.UserId == loggedInUser.Id).Select(rt => rt.TagId).ToList();
-                var tags = _db.Tags.Where(t => tagIds.Contains(t.TagId)).OrderBy(t => t.Name).ToList();
+                var tags = _db.RestaurantTags.Where(rt => rt.Restaurant.UserId == loggedInUser.Id).Select(rt => rt.Tag).ToList();
 
                 viewModel.Tags = tags;
 
@@ -71,8 +71,7 @@ namespace wheredoyouwanttoeat2.Controllers
 
             List<int> selectedTags = model.Tags.Where(t => t.Selected).Select(t => t.TagId).ToList();
 
-            List<int> restaurantIds = _db.RestaurantTags.Where(rt => selectedTags.Contains(rt.TagId)).Select(rt => rt.RestaurantId).ToList();
-            var restaurants = _db.Restaurants.Where(r => restaurantIds.Contains(r.RestaurantId) && r.UserId == loggedInUser.Id).ToList();
+            var restaurants = _db.RestaurantTags.Where(rt => selectedTags.Contains(rt.TagId)).Select(rt => rt.Restaurant).ToList();
 
             Random rnd = new Random();
             int index = rnd.Next(0, restaurants.Count);
