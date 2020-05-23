@@ -12,15 +12,11 @@ namespace wheredoyouwanttoeat2.Controllers
     {
         protected readonly UserManager<User> _userManager;
         protected ApplicationDbContext _db;
-        protected readonly SettingsConfiguration _settings;
 
-        public BaseController(UserManager<User> manager, ApplicationDbContext dbContext, IConfiguration configuration)
+        public BaseController(UserManager<User> manager, ApplicationDbContext dbContext)
         {
             _userManager = manager;
             _db = dbContext;
-
-            _settings = new SettingsConfiguration();
-            configuration.GetSection("Settings").Bind(_settings);
         }
 
         protected Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);

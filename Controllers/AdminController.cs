@@ -16,7 +16,7 @@ namespace wheredoyouwanttoeat2.Controllers
     [Authorize]
     public class AdminController : BaseController
     {
-        public AdminController(UserManager<User> manager, ApplicationDbContext dbContext, IConfiguration configuration) : base(manager, dbContext, configuration)
+        public AdminController(UserManager<User> manager, ApplicationDbContext dbContext) : base(manager, dbContext)
         {
 
         }
@@ -74,7 +74,7 @@ namespace wheredoyouwanttoeat2.Controllers
                 // this is for displaying the map on the details page...I'm making the call on the server so the calls to Mapquest's API is limited to restaurant updates
                 if (restaurant.HasFullAddress)
                 {
-                    LatLong coordinates = await Utilities.GetLatitudeAndLongitudeForAddress(_settings.MapQuestAPIKey, restaurant.FullAddress);
+                    LatLong coordinates = await Utilities.GetLatitudeAndLongitudeForAddress(restaurant.FullAddress);
 
                     restaurant.Latitude = coordinates.Latitude;
                     restaurant.Longitude = coordinates.Longitude;
@@ -236,7 +236,7 @@ namespace wheredoyouwanttoeat2.Controllers
 
                 if (hasAddressChanged || restaurant.Latitude == 0 || restaurant.Longitude == 0)
                 {
-                    var coordinates = await Utilities.GetLatitudeAndLongitudeForAddress(_settings.MapQuestAPIKey, restaurant.FullAddress);
+                    var coordinates = await Utilities.GetLatitudeAndLongitudeForAddress(restaurant.FullAddress);
                     restaurant.Latitude = coordinates.Latitude;
                     restaurant.Longitude = coordinates.Longitude;
                 }

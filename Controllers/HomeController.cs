@@ -14,7 +14,7 @@ namespace wheredoyouwanttoeat2.Controllers
 {
     public class HomeController : BaseController
     {
-        public HomeController(UserManager<User> manager, ApplicationDbContext dbContext, IConfiguration configuration) : base(manager, dbContext, configuration)
+        public HomeController(UserManager<User> manager, ApplicationDbContext dbContext) : base(manager, dbContext)
         {
 
         }

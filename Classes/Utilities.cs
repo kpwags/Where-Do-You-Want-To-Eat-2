@@ -3,11 +3,15 @@ using System.Threading.Tasks;
 using System;
 using System.Net.Http;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace wheredoyouwanttoeat2.Classes
 {
     public static class Utilities
     {
+        public static AppSettings AppSettings;
+
+
         /// <summary>
         /// Takes a comma separated list of tags and trims the excess spaces and converts them all to lower-case
         /// </summary>
@@ -25,31 +29,48 @@ namespace wheredoyouwanttoeat2.Classes
             return correctedTags;
         }
 
-        public static async Task<LatLong> GetLatitudeAndLongitudeForAddress(string apiKey, string address)
+        /// <summary>
+        /// Uses the MapQuest Geocoding API to get the latitude and longitude of an address
+        /// </summary>
+        /// <param name="apiKey">The MapQuest API Key</param>
+        /// <param name="address">The address to find the coordinates for</param>
+        /// <returns>The Latitude and Longitude coordinates of the address</returns>
+        public static async Task<LatLong> GetLatitudeAndLongitudeForAddress(string address)
         {
-            Console.WriteLine("MapQuest API Called");
             decimal latitude = 0;
             decimal longitude = 0;
 
-            string mapQuestUrl = $"http://www.mapquestapi.com/geocoding/v1/address?key={apiKey}&location={address}";
+            string mapQuestUrl = $"http://www.mapquestapi.com/geocoding/v1/address?key={AppSettings.MapQuestAPIKey}&location={address}";
 
-            using (var httpClient = new HttpClient())
+            try
             {
-                using (var response = await httpClient.GetAsync(mapQuestUrl))
+                using (var httpClient = new HttpClient())
                 {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    var mapQuestResponse = JsonSerializer.Deserialize<MapQuestResponse>(apiResponse);
-
-                    if (mapQuestResponse.results.Count > 0)
+                    using (var response = await httpClient.GetAsync(mapQuestUrl))
                     {
-                        if (mapQuestResponse.results[0].locations.Count > 0)
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var mapQuestResponse = JsonSerializer.Deserialize<MapQuestResponse>(apiResponse);
+
+                        if (mapQuestResponse.results.Count > 0)
                         {
-                            latitude = mapQuestResponse.results[0].locations[0].displayLatLng.lat;
-                            longitude = mapQuestResponse.results[0].locations[0].displayLatLng.lng;
+                            if (mapQuestResponse.results[0].locations.Count > 0)
+                            {
+                                latitude = mapQuestResponse.results[0].locations[0].displayLatLng.lat;
+                                longitude = mapQuestResponse.results[0].locations[0].displayLatLng.lng;
+                            }
                         }
                     }
                 }
             }
+            catch (HttpRequestException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"HTTP request error calling MapQuest API: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error calling MapQuest API: {ex.Message}");
+            }
+
 
             return new LatLong(latitude, longitude);
         }
