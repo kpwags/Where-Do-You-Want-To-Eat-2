@@ -24,6 +24,7 @@ namespace wheredoyouwanttoeat2.Controllers
             var loggedInUser = await GetCurrentUserAsync();
             var viewModel = new Randomizer
             {
+                RestaurantCount = 0,
                 Tags = new List<Tag>(),
                 ChoiceCount = 0,
                 ButtonText = "Choose Where to Eat!",
@@ -36,6 +37,7 @@ namespace wheredoyouwanttoeat2.Controllers
 
                 var tags = _db.RestaurantTags.Where(rt => rt.Restaurant.UserId == loggedInUser.Id).Select(rt => rt.Tag).ToList();
 
+                viewModel.RestaurantCount = _db.Restaurants.Count(r => r.UserId == loggedInUser.Id);
                 viewModel.Tags = tags;
 
                 return View(viewModel);
