@@ -19,6 +19,11 @@ namespace wheredoyouwanttoeat2.Classes
         /// <returns>A list of strings with all extra spaces removed and converted to lower case</returns>
         public static List<string> CorrectUserEnteredTags(string tagList)
         {
+            if (tagList == null)
+            {
+                return new List<string>();
+            }
+
             List<string> correctedTags = new List<string>();
 
             foreach (string tag in tagList.Split(','))

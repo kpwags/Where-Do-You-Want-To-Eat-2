@@ -28,7 +28,8 @@ namespace wheredoyouwanttoeat2.Controllers
                 Tags = new List<Tag>(),
                 ChoiceCount = 0,
                 ButtonText = "Choose Where to Eat!",
-                SelectedRestaurant = null
+                SelectedRestaurant = null,
+                ErrorText = string.Empty
             };
 
             if (loggedInUser != null)
@@ -71,9 +72,30 @@ namespace wheredoyouwanttoeat2.Controllers
 
             TempData["choice_count"] = choiceCount;
 
-            List<int> selectedTags = model.Tags.Where(t => t.Selected).Select(t => t.TagId).ToList();
+            model.RestaurantCount = _db.Restaurants.Count(r => r.UserId == loggedInUser.Id);
+            var userTagsCount = _db.RestaurantTags.Count(rt => rt.Restaurant.UserId == loggedInUser.Id);
 
-            var restaurants = _db.RestaurantTags.Where(rt => selectedTags.Contains(rt.TagId)).Select(rt => rt.Restaurant).ToList();
+            List<Restaurant> restaurants = new List<Restaurant>();
+
+            if (userTagsCount == 0)
+            {
+                // user doesn't have any tags, just randomly choose a restaurant
+                restaurants = _db.Restaurants.Where(r => r.UserId == loggedInUser.Id).ToList();
+            }
+            else
+            {
+                if (model.Tags.Count(t => t.Selected) > 0)
+                {
+                    List<int> selectedTags = model.Tags.Where(t => t.Selected).Select(t => t.TagId).ToList();
+                    restaurants = _db.RestaurantTags.Where(rt => selectedTags.Contains(rt.TagId)).Select(rt => rt.Restaurant).ToList();
+                }
+                else
+                {
+                    // user has tags, but has de-selected everything, alert them
+                    model.ErrorText = "Please select at least one tag";
+                    return View(model);
+                }
+            }
 
             Random rnd = new Random();
             int index = rnd.Next(0, restaurants.Count);
@@ -102,6 +124,7 @@ namespace wheredoyouwanttoeat2.Controllers
 
             model.ButtonText = "Meh...Choose Another";
             model.ChoiceCount = choiceCount;
+            model.ErrorText = string.Empty;
 
             return View(model);
         }

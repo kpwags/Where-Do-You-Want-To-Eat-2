@@ -11,5 +11,6 @@ namespace wheredoyouwanttoeat2.ViewModel
         public string ButtonText { get; set; }
         public List<Tag> Tags { get; set; }
         public string LeadingText { get; set; }
+        public string ErrorText { get; set; } = string.Empty;
     }
 }
