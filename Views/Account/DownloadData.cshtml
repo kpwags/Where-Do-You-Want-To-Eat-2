@@ -1,0 +1,35 @@
+@model wheredoyouwanttoeat2.ViewModel.DownloadData
+@{
+    ViewData["Title"] = "Download Your Data";
+    ViewData["ActiveAccountPage"] = "downloaddata";
+
+    string[] DataFormats = new[] { "XML", "JSON" };
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <partial name="_AccountSidebar" />
+    </div>
+    <div class="col-md-6">
+        <h2>Download Your Data</h2>
+
+        <form asp-action="DownloadData" class="mt-4">
+            <h5>Please Choose Your Preferred Data Format</h5>
+
+            <div class="form-group">
+                @foreach (var format in DataFormats)
+                {
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="radio" asp-for="DataFormat" value="@format" />
+                        <label class="form-check-label" for="@format">@format</label>
+                    </div>
+                }
+                <span asp-validation-for="DataFormat" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary">Download</button>
+            </div>
+        </form>
+    </div>
+</div>

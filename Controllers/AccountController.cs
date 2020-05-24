@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using wheredoyouwanttoeat2.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using wheredoyouwanttoeat2.Data;
+using System.Linq;
 
 namespace wheredoyouwanttoeat2.Controllers
 {
@@ -9,11 +12,13 @@ namespace wheredoyouwanttoeat2.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        protected ApplicationDbContext _db;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext dbContext)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
+            this._db = dbContext;
         }
 
         public IActionResult Register()
@@ -137,6 +142,75 @@ namespace wheredoyouwanttoeat2.Controllers
                 }
             }
 
+            return View(model);
+        }
+
+        public IActionResult DownloadData()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> DownloadData(ViewModel.DownloadData model)
+        {
+            if (ModelState.IsValid)
+            {
+                var loggedInUser = await GetCurrentUserAsync();
+
+                var UserData = new Classes.DownloadData.UserData
+                {
+                    User = new Classes.DownloadData.User
+                    {
+                        Id = loggedInUser.Id,
+                        Username = loggedInUser.UserName,
+                        NormalizedUsername = loggedInUser.NormalizedUserName,
+                        Email = loggedInUser.Email,
+                        NormalizedEmail = loggedInUser.NormalizedEmail,
+                        Name = loggedInUser.Name
+                    },
+                    Restaurants = new List<Classes.DownloadData.Restaurant>()
+                };
+
+                var restaurants = _db.Restaurants.Where(r => r.UserId == loggedInUser.Id).OrderBy(r => r.Name).ToList();
+
+                foreach (var restaurant in restaurants)
+                {
+                    Classes.DownloadData.Restaurant r = new Classes.DownloadData.Restaurant
+                    {
+                        RestaurantId = restaurant.RestaurantId,
+                        Name = restaurant.Name,
+                        AddressLine1 = restaurant.AddressLine1,
+                        AddressLine2 = restaurant.AddressLine2,
+                        City = restaurant.City,
+                        State = restaurant.State,
+                        ZipCode = restaurant.ZipCode,
+                        PhoneNumber = restaurant.PhoneNumber,
+                        Website = restaurant.Website,
+                        Menu = restaurant.Menu,
+                        Latitude = restaurant.Latitude,
+                        Longitude = restaurant.Longitude,
+                        Tags = string.Join(", ", restaurant.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).Select(rt => rt.Tag.Name).ToList())
+                    };
+
+                    UserData.Restaurants.Add(r);
+                }
+
+                string download = string.Empty;
+                switch (model.DataFormat)
+                {
+                    case "XML":
+                        download = UserData.DownloadAsXML();
+                        break;
+
+                    case "JSON":
+                        download = UserData.DownloadAsJSON();
+                        break;
+
+                    default:
+                        ModelState.AddModelError(nameof(model.DataFormat), "Invalid data format");
+                        break;
+                }
+            };
             return View(model);
         }
 
