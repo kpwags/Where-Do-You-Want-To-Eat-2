@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model wheredoyouwanttoeat2.ViewModel.ChooserViewModel
+@model wheredoyouwanttoeat2.ViewModel.Randomizer
 @inject SignInManager<User> SignInManager
 
 @section Styles {
@@ -9,10 +9,6 @@
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
         integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
         crossorigin=""></script>
-}
-
-@section Scripts {
-
 }
 
 @if (SignInManager.IsSignedIn(User))
@@ -43,7 +39,7 @@
             }
             else
             {
-                <h1 class="display-4 text-center">Where to Eat?</h1>
+                <h1 class="display-4 text-center">Where Should We Eat?</h1>
                 <partial name="_RandomizerForm" model="Model"/>
             }
         </div>

@@ -75,6 +75,7 @@ namespace wheredoyouwanttoeat2.Classes
             return new LatLong(latitude, longitude);
         }
 
+
         public static List<string> TooManyChoices = new List<string>
         {
             "You really need another place to go? Okay, fine! You're going to...",

@@ -39,7 +39,7 @@ namespace wheredoyouwanttoeat2
                     .UseSqlite(
                         Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddControllersWithViews();

@@ -22,7 +22,7 @@ namespace wheredoyouwanttoeat2.Controllers
         public async Task<IActionResult> Index()
         {
             var loggedInUser = await GetCurrentUserAsync();
-            var viewModel = new ChooserViewModel
+            var viewModel = new Randomizer
             {
                 Tags = new List<Tag>(),
                 ChoiceCount = 0,
@@ -57,7 +57,7 @@ namespace wheredoyouwanttoeat2.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(ChooserViewModel model)
+        public async Task<IActionResult> Index(Randomizer model)
         {
             var loggedInUser = await GetCurrentUserAsync();
 
