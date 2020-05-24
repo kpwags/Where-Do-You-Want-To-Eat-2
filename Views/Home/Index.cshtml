@@ -15,32 +15,40 @@
 {
     <div class="row">
         <div class="col-md-12 mx-auto mt-3">
-            @if (Model.SelectedRestaurant != null)
+            @if (Model.RestaurantCount > 0)
             {
-                <div class="jumbotron">
-                    <p class="lead">@Model.LeadingText</p>
+                if (Model.SelectedRestaurant != null)
+                {
+                    <div class="jumbotron">
+                        <p class="lead">@Model.LeadingText</p>
 
-                    @if (Model.ChoiceCount <= 20)
-                    {
-                        <h1 class="display-4">@(Model.SelectedRestaurant.Name)</h1>
-
-                        @if (Model.ChoiceCount <= 4)
+                        @if (Model.ChoiceCount <= 20)
                         {
-                            <p class="lead">Looks like a good choice!</p>
+                            <h1 class="display-4">@(Model.SelectedRestaurant.Name)</h1>
+
+                            @if (Model.ChoiceCount <= 4)
+                            {
+                                <p class="lead">Looks like a good choice!</p>
+                            }
+
+                            <hr class="my-4">
+
+                            <partial name="_RestaurantInfo" model="@Model.SelectedRestaurant" />
+
+                            <partial name="_RandomizerForm" model="Model"/>
                         }
-
-                        <hr class="my-4">
-
-                        <partial name="_RestaurantInfo" model="@Model.SelectedRestaurant" />
-
-                        <partial name="_RandomizerForm" model="Model"/>
-                    }
-                </div>
+                    </div>
+                }
+                else
+                {
+                    <h1 class="display-4 text-center">Where Should We Eat?</h1>
+                    <partial name="_RandomizerForm" model="Model"/>
+                }
             }
             else
             {
-                <h1 class="display-4 text-center">Where Should We Eat?</h1>
-                <partial name="_RandomizerForm" model="Model"/>
+                <h1 class="display-4 text-center">Add Some Restaurants First!</h1>
+                <p class="mt-3 text-center">Before you can continue, you need to <a asp-controller="Admin" asp-action="AddRestaurant">add a restaurant</a>.</p>
             }
         </div>
     </div>
