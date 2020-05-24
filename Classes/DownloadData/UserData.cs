@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Text.Json;
 using System.IO;
 
 namespace wheredoyouwanttoeat2.Classes.DownloadData
@@ -18,7 +19,15 @@ namespace wheredoyouwanttoeat2.Classes.DownloadData
 
             using (var sww = new StringWriter())
             {
-                using (XmlWriter writer = XmlWriter.Create(sww))
+                XmlWriterSettings settings = new XmlWriterSettings
+                {
+                    Indent = true,
+                    IndentChars = "  ",
+                    NewLineChars = "\r\n",
+                    NewLineHandling = NewLineHandling.Replace
+                };
+
+                using (XmlWriter writer = XmlWriter.Create(sww, settings))
                 {
                     xsSubmit.Serialize(writer, this);
                     xml = sww.ToString(); // Your XML
@@ -30,7 +39,16 @@ namespace wheredoyouwanttoeat2.Classes.DownloadData
 
         public string DownloadAsJSON()
         {
-            return "";
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            var json = "{}";
+
+            json  = JsonSerializer.Serialize(this, options);
+
+            return json;
         }
     }
 }

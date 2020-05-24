@@ -2,5 +2,5 @@
     <a asp-controller="Account" asp-action="EditProfile" class="list-group-item list-group-item-action @(ViewData["ActiveAccountPage"].ToString() == "profile" ? "active" : "")">Profile</a>
     <a asp-controller="Account" asp-action="ChangePassword" class="list-group-item list-group-item-action @(ViewData["ActiveAccountPage"].ToString() == "changepassword" ? "active" : "")">Change Password</a>
     <a asp-controller="Account" asp-action="DownloadData" class="list-group-item list-group-item-action @(ViewData["ActiveAccountPage"].ToString() == "downloaddata" ? "active" : "")">Download Your Data</a>
-    <a asp-controller="Account" asp-action="EditProfile" class="list-group-item list-group-item-action @(ViewData["ActiveAccountPage"].ToString() == "deleteaccount" ? "active" : "")">Delete Account</a>
+    <a asp-controller="Account" asp-action="DeleteAccount" class="list-group-item list-group-item-action @(ViewData["ActiveAccountPage"].ToString() == "deleteaccount" ? "active" : "")">Delete Account</a>
 </div>
