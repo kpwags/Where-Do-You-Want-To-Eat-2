@@ -3,7 +3,7 @@ using wheredoyouwanttoeat2.Models;
 
 namespace wheredoyouwanttoeat2.ViewModel
 {
-    public class ChooserViewModel
+    public class Randomizer
     {
         public Restaurant SelectedRestaurant { get; set; }
         public int ChoiceCount { get; set; }
