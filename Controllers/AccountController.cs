@@ -6,20 +6,24 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using wheredoyouwanttoeat2.Data;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace wheredoyouwanttoeat2.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly ILogger _logger;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         protected ApplicationDbContext _db;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext dbContext)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext dbContext, ILogger<AccountController> logger)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._db = dbContext;
+            this._logger = logger;
         }
 
         public IActionResult Register()
@@ -32,23 +36,30 @@ namespace wheredoyouwanttoeat2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User
+                try
                 {
-                    Name = model.Name,
-                    UserName = model.Email,
-                    Email = model.Email,
-                };
+                    var user = new User
+                    {
+                        Name = model.Name,
+                        UserName = model.Email,
+                        Email = model.Email,
+                    };
 
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
                 }
-
-                foreach (var error in result.Errors)
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    _logger.LogError(ex, "Error registerring user");
                 }
             }
 
@@ -65,19 +76,30 @@ namespace wheredoyouwanttoeat2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user != null)
+                try
                 {
-                    await _signInManager.SignOutAsync();
-                    Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
-
-                    if (result.Succeeded)
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    if (user != null)
                     {
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
+                        await _signInManager.SignOutAsync();
+                        Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
 
-                ModelState.AddModelError(nameof(model.Email), "Login Failed: User Not Found");
+                        if (result.Succeeded)
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            _logger.LogInformation($"Failed login attempt for {model.Email} (IP: {HttpContext.Connection.RemoteIpAddress})");
+                        }
+                    }
+
+                    ModelState.AddModelError(nameof(model.Email), "Login Failed: User Not Found");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Error loggin in user: {model.Email}");
+                }
 
             }
             return View(model);
@@ -107,16 +129,23 @@ namespace wheredoyouwanttoeat2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var loggedInUser = await GetCurrentUserAsync();
-
-                loggedInUser.Email = model.Email;
-                loggedInUser.Name = model.Name;
-
-                var result = await _userManager.UpdateAsync(loggedInUser);
-
-                if (!result.Succeeded)
+                try
                 {
-                    ModelState.AddModelError(nameof(model.Email), "Error updating user profile");
+                    var loggedInUser = await GetCurrentUserAsync();
+
+                    loggedInUser.Email = model.Email;
+                    loggedInUser.Name = model.Name;
+
+                    var result = await _userManager.UpdateAsync(loggedInUser);
+
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError(nameof(model.Email), "Error updating user profile");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Error saving profile changes for {model.Email}");
                 }
             }
 
@@ -133,13 +162,20 @@ namespace wheredoyouwanttoeat2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var loggedInUser = await GetCurrentUserAsync();
-
-                var result = await _userManager.ChangePasswordAsync(loggedInUser, model.CurrentPassword, model.Password);
-
-                if (!result.Succeeded)
+                try
                 {
-                    ModelState.AddModelError(nameof(model.CurrentPassword), "Incorrect password");
+                    var loggedInUser = await GetCurrentUserAsync();
+
+                    var result = await _userManager.ChangePasswordAsync(loggedInUser, model.CurrentPassword, model.Password);
+
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError(nameof(model.CurrentPassword), "Incorrect password");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error changing password");
                 }
             }
 
@@ -154,9 +190,11 @@ namespace wheredoyouwanttoeat2.Controllers
         [HttpGet]
         public async Task<IActionResult> DownloadUserData([FromQuery] string dataFormat)
         {
-            var loggedInUser = await GetCurrentUserAsync();
+            try
+            {
+                var loggedInUser = await GetCurrentUserAsync();
 
-            var UserData = new Classes.DownloadData.UserData
+                var UserData = new Classes.DownloadData.UserData
                 {
                     User = new Classes.DownloadData.User
                     {
@@ -170,54 +208,70 @@ namespace wheredoyouwanttoeat2.Controllers
                     Restaurants = new List<Classes.DownloadData.Restaurant>()
                 };
 
-            var restaurants = _db.Restaurants.Where(r => r.UserId == loggedInUser.Id).OrderBy(r => r.Name).ToList();
+                var restaurants = _db.Restaurants.Where(r => r.UserId == loggedInUser.Id).OrderBy(r => r.Name).ToList();
 
-            foreach (var restaurant in restaurants)
-            {
-                Classes.DownloadData.Restaurant r = new Classes.DownloadData.Restaurant
+                foreach (var restaurant in restaurants)
                 {
-                    RestaurantId = restaurant.RestaurantId,
-                    Name = restaurant.Name,
-                    AddressLine1 = restaurant.AddressLine1,
-                    AddressLine2 = restaurant.AddressLine2,
-                    City = restaurant.City,
-                    State = restaurant.State,
-                    ZipCode = restaurant.ZipCode,
-                    PhoneNumber = restaurant.PhoneNumber,
-                    Website = restaurant.Website,
-                    Menu = restaurant.Menu,
-                    Latitude = restaurant.Latitude,
-                    Longitude = restaurant.Longitude,
-                    Tags = string.Join(", ", restaurant.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).Select(rt => rt.Tag.Name).ToList())
-                };
+                    Classes.DownloadData.Restaurant r = new Classes.DownloadData.Restaurant
+                    {
+                        RestaurantId = restaurant.RestaurantId,
+                        Name = restaurant.Name,
+                        AddressLine1 = restaurant.AddressLine1,
+                        AddressLine2 = restaurant.AddressLine2,
+                        City = restaurant.City,
+                        State = restaurant.State,
+                        ZipCode = restaurant.ZipCode,
+                        PhoneNumber = restaurant.PhoneNumber,
+                        Website = restaurant.Website,
+                        Menu = restaurant.Menu,
+                        Latitude = restaurant.Latitude,
+                        Longitude = restaurant.Longitude,
+                        Tags = string.Join(", ", restaurant.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).Select(rt => rt.Tag.Name).ToList())
+                    };
 
-                UserData.Restaurants.Add(r);
+                    UserData.Restaurants.Add(r);
+                }
+
+                string download = string.Empty;
+                string filename = string.Empty;
+                string contentType = "application/octet-stream";
+
+                switch (dataFormat)
+                {
+                    case "XML":
+                        download = UserData.DownloadAsXML();
+                        filename = "wheredoyouwanttoeat.xml";
+                        contentType = "text/xml";
+                        break;
+
+                    case "JSON":
+                        download = UserData.DownloadAsJSON();
+                        filename = "wheredoyouwanttoeat.json";
+                        contentType = "application/json";
+                        break;
+                }
+
+                byte[] bytes = Encoding.ASCII.GetBytes(download);
+
+                var content = new System.IO.MemoryStream(bytes);
+
+                return File(content, contentType, filename);
             }
-
-            string download = string.Empty;
-            string filename = string.Empty;
-            string contentType = "application/octet-stream";
-
-            switch (dataFormat)
+            catch (System.Xml.XmlException ex)
             {
-                case "XML":
-                    download = UserData.DownloadAsXML();
-                    filename = "wheredoyouwanttoeat.xml";
-                    contentType = "text/xml";
-                    break;
-
-                case "JSON":
-                    download = UserData.DownloadAsJSON();
-                    filename = "wheredoyouwanttoeat.json";
-                    contentType = "application/json";
-                    break;
+                _logger.LogError(ex, "Error Downloading Data as XML");
+                return RedirectToAction("DownloadData");
             }
-
-            byte[] bytes = Encoding.ASCII.GetBytes(download);
-
-            var content = new System.IO.MemoryStream(bytes);
-
-            return File(content, contentType, filename);
+            catch (System.Text.Json.JsonException ex)
+            {
+                _logger.LogError(ex, "Error Downloading Data as JSON");
+                return RedirectToAction("DownloadData");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Downloading Data");
+                return RedirectToAction("DownloadData");
+            }
         }
 
         public IActionResult DeleteAccount()
@@ -230,28 +284,35 @@ namespace wheredoyouwanttoeat2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var loggedInUser = await GetCurrentUserAsync();
-
-                Microsoft.AspNetCore.Identity.SignInResult passwordResult = await _signInManager.CheckPasswordSignInAsync(loggedInUser, model.Password, false);
-
-                if (!passwordResult.Succeeded)
+                try
                 {
-                    ModelState.AddModelError(nameof(model.Password), "Invalid password");
-                    return View(model);
+                    var loggedInUser = await GetCurrentUserAsync();
+
+                    Microsoft.AspNetCore.Identity.SignInResult passwordResult = await _signInManager.CheckPasswordSignInAsync(loggedInUser, model.Password, false);
+
+                    if (!passwordResult.Succeeded)
+                    {
+                        ModelState.AddModelError(nameof(model.Password), "Invalid password");
+                        return View(model);
+                    }
+
+                    await _signInManager.SignOutAsync();
+
+                    await DeleteUserRestaurants(loggedInUser);
+
+                    var result = await _userManager.DeleteAsync(loggedInUser);
+
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError(nameof(model.Password), "Error deleting account");
+                    }
+
+                    return RedirectToAction("Index", "Home");
                 }
-
-                await _signInManager.SignOutAsync();
-
-                await DeleteUserRestaurants(loggedInUser);
-
-                var result = await _userManager.DeleteAsync(loggedInUser);
-
-                if (!result.Succeeded)
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError(nameof(model.Password), "Error deleting account");
+                    _logger.LogError(ex, "Error Deleting Account");
                 }
-
-                return RedirectToAction("Index", "Home");
             }
 
             return View(model);

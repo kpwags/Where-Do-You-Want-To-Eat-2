@@ -29,3 +29,4 @@ app.db
 **/appsettings.production.json
 *.db-shm
 *.db-wal
+Logs

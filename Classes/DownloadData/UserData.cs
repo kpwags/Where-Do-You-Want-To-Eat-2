@@ -14,41 +14,63 @@ namespace wheredoyouwanttoeat2.Classes.DownloadData
 
         public string DownloadAsXML()
         {
-            XmlSerializer xsSubmit = new XmlSerializer(typeof(UserData));
-            var xml = "";
-
-            using (var sww = new StringWriter())
+            try
             {
-                XmlWriterSettings settings = new XmlWriterSettings
-                {
-                    Indent = true,
-                    IndentChars = "  ",
-                    NewLineChars = "\r\n",
-                    NewLineHandling = NewLineHandling.Replace
-                };
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(UserData));
+                var xml = "";
 
-                using (XmlWriter writer = XmlWriter.Create(sww, settings))
+                using (var sww = new StringWriter())
                 {
-                    xsSubmit.Serialize(writer, this);
-                    xml = sww.ToString(); // Your XML
+                    XmlWriterSettings settings = new XmlWriterSettings
+                    {
+                        Indent = true,
+                        IndentChars = "  ",
+                        NewLineChars = "\r\n",
+                        NewLineHandling = NewLineHandling.Replace
+                    };
+
+                    using (XmlWriter writer = XmlWriter.Create(sww, settings))
+                    {
+                        xsSubmit.Serialize(writer, this);
+                        xml = sww.ToString(); // Your XML
+                    }
                 }
-            }
 
-            return xml;
+                return xml;
+            }
+            catch (XmlException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public string DownloadAsJSON()
         {
-            var options = new JsonSerializerOptions
+            try
             {
-                WriteIndented = true
-            };
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                };
 
-            var json = "{}";
+                var json = "{}";
 
-            json  = JsonSerializer.Serialize(this, options);
+                json = JsonSerializer.Serialize(this, options);
 
-            return json;
+                return json;
+            }
+            catch (JsonException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
