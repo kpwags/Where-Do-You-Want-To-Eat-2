@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using wheredoyouwanttoeat2.Models;
 using wheredoyouwanttoeat2.Data;
-using wheredoyouwanttoeat2.Classes;
+using Microsoft.Extensions.Logging;
 
 namespace wheredoyouwanttoeat2.Controllers
 {
@@ -12,11 +12,13 @@ namespace wheredoyouwanttoeat2.Controllers
     {
         protected readonly UserManager<User> _userManager;
         protected ApplicationDbContext _db;
+        protected readonly ILogger _logger;
 
-        public BaseController(UserManager<User> manager, ApplicationDbContext dbContext)
+        public BaseController(UserManager<User> manager, ApplicationDbContext dbContext, ILogger<BaseController> logger)
         {
             _userManager = manager;
             _db = dbContext;
+            _logger = logger;
         }
 
         protected Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
