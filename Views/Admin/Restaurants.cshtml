@@ -1,4 +1,4 @@
-@model List<Restaurant>
+@model wheredoyouwanttoeat2.ViewModel.RestaurantAdmin
 @{
     ViewData["Title"] = "Restaurants";
 }
@@ -8,6 +8,10 @@
     <p class="mt-4">
         <a class="btn btn-success"  asp-area="" asp-controller="Admin" asp-action="AddRestaurant">Add a Restaurant</a>
     </p>
+
+    <partial name="_ErrorMessage" model="@Model.ErrorMessage" />
+    <partial name="_WarningMessage" model="@Model.WarningMessage" />
+
     <table class="table table-striped mt-4">
         <thead>
             <tr>
@@ -18,7 +22,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var restaurant in Model)
+            @foreach (var restaurant in Model.Restaurants)
             {
                 <tr>
                     <td>@restaurant.Name</td>

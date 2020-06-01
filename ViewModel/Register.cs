@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace wheredoyouwanttoeat2.ViewModel
 {
-    public class Register
+    public class Register : BaseViewModel
     {
         [Required]
         [Display(Name = "Name")]

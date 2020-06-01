@@ -7,9 +7,6 @@
 
     @if (Model.Tags != null && Model.Tags.Count > 0)
     {
-        <div class="text-center mt-5 @(Model.ErrorText == string.Empty ? "d-none" : "")">
-            <div class="text-danger">@Model.ErrorText</div>
-        </div>
         <div class="row mt-5">
             @for (int i = 0; i < Model.Tags.Count; i++)
             {

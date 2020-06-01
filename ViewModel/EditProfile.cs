@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace wheredoyouwanttoeat2.ViewModel
 {
-    public class EditProfile
+    public class EditProfile : BaseViewModel
     {
         [Required]
         [Display(Name = "Name")]
