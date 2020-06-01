@@ -419,7 +419,8 @@ namespace wheredoyouwanttoeat2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting restaurant");
-                return RedirectToAction("Restaurants", new ViewModel.RestaurantAdmin { ErrorMessage = "Error deleting restaurant" });
+                TempData["errormessage"] = "Error deleting restaurant";
+                return RedirectToAction("Restaurants");
             }
 
             return RedirectToAction("Restaurants");

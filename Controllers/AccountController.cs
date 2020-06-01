@@ -284,7 +284,8 @@ namespace wheredoyouwanttoeat2.Controllers
 
         public IActionResult DeleteAccount()
         {
-            return View();
+            var model = new ViewModel.DeleteAccount();
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -312,13 +313,14 @@ namespace wheredoyouwanttoeat2.Controllers
 
                     if (!result.Succeeded)
                     {
-                        ModelState.AddModelError(nameof(model.Password), "Error deleting account");
+                        model.ErrorMessage = "Error deleting account";
                     }
 
                     return RedirectToAction("Index", "Home");
                 }
                 catch (Exception ex)
                 {
+                    model.ErrorMessage = "Error deleting account";
                     _logger.LogError(ex, "Error Deleting Account");
                 }
             }
