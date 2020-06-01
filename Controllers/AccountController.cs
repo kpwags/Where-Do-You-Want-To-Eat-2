@@ -26,6 +26,7 @@ namespace wheredoyouwanttoeat2.Controllers
             this._logger = logger;
         }
 
+        [Route("register")]
         public IActionResult Register()
         {
             var model = new ViewModel.Register();
@@ -33,6 +34,7 @@ namespace wheredoyouwanttoeat2.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Route("register")]
         public async Task<IActionResult> Register(ViewModel.Register model)
         {
             if (ModelState.IsValid)
@@ -68,6 +70,7 @@ namespace wheredoyouwanttoeat2.Controllers
             return View(model);
         }
 
+        [Route("login")]
         public IActionResult Login()
         {
             var model = new ViewModel.Login();
@@ -75,6 +78,7 @@ namespace wheredoyouwanttoeat2.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Route("login")]
         public async Task<IActionResult> Login(ViewModel.Login model)
         {
             if (ModelState.IsValid)
@@ -109,12 +113,14 @@ namespace wheredoyouwanttoeat2.Controllers
             return View(model);
         }
 
+        [Route("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
+        [Route("edit-profile")]
         public async Task<IActionResult> EditProfile()
         {
             var loggedInUser = await GetCurrentUserAsync();
@@ -129,6 +135,7 @@ namespace wheredoyouwanttoeat2.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Route("edit-profile")]
         public async Task<IActionResult> EditProfile(ViewModel.EditProfile model)
         {
             if (ModelState.IsValid)
@@ -157,6 +164,7 @@ namespace wheredoyouwanttoeat2.Controllers
             return View(model);
         }
 
+        [Route("change-password")]
         public IActionResult ChangePassword()
         {
             var model = new ViewModel.ChangePassword();
@@ -164,6 +172,7 @@ namespace wheredoyouwanttoeat2.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Route("change-password")]
         public async Task<IActionResult> ChangePassword(ViewModel.ChangePassword model)
         {
             if (ModelState.IsValid)
@@ -189,6 +198,7 @@ namespace wheredoyouwanttoeat2.Controllers
             return View(model);
         }
 
+        [Route("download-data")]
         public IActionResult DownloadData()
         {
             var model = new ViewModel.DownloadData();
@@ -282,6 +292,7 @@ namespace wheredoyouwanttoeat2.Controllers
             }
         }
 
+        [Route("delete-account")]
         public IActionResult DeleteAccount()
         {
             var model = new ViewModel.DeleteAccount();
@@ -289,6 +300,7 @@ namespace wheredoyouwanttoeat2.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Route("delete-account")]
         public async Task<IActionResult> DeleteAccount(ViewModel.DeleteAccount model)
         {
             if (ModelState.IsValid)
