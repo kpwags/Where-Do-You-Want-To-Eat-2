@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace wheredoyouwanttoeat2.ViewModel
 {
-    public class Login
+    public class Login : BaseViewModel
     {
         [Required]
         [EmailAddress]

@@ -17,6 +17,9 @@
         <div class="col-md-12 mx-auto mt-3">
             @if (Model.RestaurantCount > 0)
             {
+                <partial name="_ErrorMessage" model="@Model.ErrorMessage" />
+                <partial name="_WarningMessage" model="@Model.WarningMessage" />
+
                 if (Model.SelectedRestaurant != null)
                 {
                     <div class="jumbotron">

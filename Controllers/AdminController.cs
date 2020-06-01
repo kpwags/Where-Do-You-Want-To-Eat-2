@@ -27,9 +27,18 @@ namespace wheredoyouwanttoeat2.Controllers
             try
             {
                 var loggedInUser = await GetCurrentUserAsync();
-                var model = _db.Restaurants.Where(r => r.UserId == loggedInUser.Id).OrderBy(r => r.Name).ToList();
+                var model = new ViewModel.RestaurantAdmin
+                {
+                    Restaurants = _db.Restaurants.Where(r => r.UserId == loggedInUser.Id).OrderBy(r => r.Name).ToList()
+                };
 
-                foreach (var restaurant in model)
+                if (TempData["errormessage"] != null)
+                {
+                    model.ErrorMessage = TempData["errormessage"].ToString();
+                    TempData["errormessage"] = null;
+                }
+
+                foreach (var restaurant in model.Restaurants)
                 {
                     restaurant.TagString = string.Join(", ", restaurant.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).Select(rt => rt.Tag.Name).ToList());
                 }
@@ -39,7 +48,11 @@ namespace wheredoyouwanttoeat2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving restaurants");
-                return View(new List<Restaurant>());
+                var model = new ViewModel.RestaurantAdmin
+                {
+                    ErrorMessage = "Error retrieiving restaurants"
+                };
+                return View(model);
             }
         }
 
@@ -175,10 +188,10 @@ namespace wheredoyouwanttoeat2.Controllers
 
                 return View(restaurant);
             }
-            else
-            {
-                return RedirectToAction("Restaurants");
-            }
+
+            // restaurant not found, redirect to list
+            TempData["errormessage"] = "Restaurant not found";
+            return RedirectToAction("Restaurants");
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -192,8 +205,8 @@ namespace wheredoyouwanttoeat2.Controllers
                 if (restaurant == null)
                 {
                     // restaurant not found, redirect to list
-                    // TODO: Add error message here
-                    return RedirectToAction("Restaurants", "Admin");
+                    TempData["errormessage"] = "Restaurant not found";
+                    return RedirectToAction("Restaurants");
                 }
 
                 // first, let's handle the tags
@@ -340,6 +353,8 @@ namespace wheredoyouwanttoeat2.Controllers
                 return View(restaurant);
             }
 
+            // restaurant not found, redirect to list
+            TempData["errormessage"] = "Restaurant not found";
             return RedirectToAction("Restaurants");
         }
 
@@ -348,12 +363,13 @@ namespace wheredoyouwanttoeat2.Controllers
         public async Task<IActionResult> DeleteRestaurant(Restaurant model)
         {
             var restaurant = _db.Restaurants.Where(r => r.RestaurantId == model.RestaurantId).FirstOrDefault();
+            string errorMessage = string.Empty;
 
             if (restaurant == null)
             {
                 // restaurant not found, redirect to list
-                // TODO: Add error message here
-                return RedirectToAction("Restaurants", "Admin");
+                TempData["errormessage"] = "Restaurant not found";
+                return RedirectToAction("Restaurants");
             }
 
             try
@@ -403,6 +419,8 @@ namespace wheredoyouwanttoeat2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting restaurant");
+                TempData["errormessage"] = "Error deleting restaurant";
+                return RedirectToAction("Restaurants");
             }
 
             return RedirectToAction("Restaurants");

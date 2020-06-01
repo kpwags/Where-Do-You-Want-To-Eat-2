@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace wheredoyouwanttoeat2.ViewModel
 {
-    public class DeleteAccount
+    public class DeleteAccount : BaseViewModel
     {
         [Required]
         [DataType(DataType.Password)]

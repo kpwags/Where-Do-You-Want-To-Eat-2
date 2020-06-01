@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-
 namespace wheredoyouwanttoeat2.ViewModel
 {
-    public class ChangePassword
+    public class ChangePassword : BaseViewModel
     {
         [Required]
         [Display(Name = "Current Password")]

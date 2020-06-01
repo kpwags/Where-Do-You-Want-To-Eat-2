@@ -30,7 +30,7 @@ namespace wheredoyouwanttoeat2.Controllers
                 ChoiceCount = 0,
                 ButtonText = "Choose Where to Eat!",
                 SelectedRestaurant = null,
-                ErrorText = string.Empty
+                ErrorMessage = string.Empty
             };
 
             if (loggedInUser != null)
@@ -46,7 +46,7 @@ namespace wheredoyouwanttoeat2.Controllers
                 }
                 catch (Exception ex)
                 {
-                    viewModel.ErrorText = "Error retrieving tags";
+                    viewModel.ErrorMessage = "Error retrieving tags";
                     _logger.LogError(ex, $"Error initializng user tags for {loggedInUser.Email}");
                 }
 
@@ -103,7 +103,8 @@ namespace wheredoyouwanttoeat2.Controllers
                     else
                     {
                         // user has tags, but has de-selected everything, alert them
-                        model.ErrorText = "Please select at least one tag";
+                        model.ErrorMessage = "Please select at least one tag";
+                        model.ButtonText = "Choose Where to Eat!";
                         return View(model);
                     }
                 }
@@ -135,12 +136,12 @@ namespace wheredoyouwanttoeat2.Controllers
 
                 model.ButtonText = "Meh...Choose Another";
                 model.ChoiceCount = choiceCount;
-                model.ErrorText = string.Empty;
+                model.ErrorMessage = string.Empty;
             }
             catch (Exception ex)
             {
                 model.ChoiceCount = 1;
-                model.ErrorText = "Error picking restaurant";
+                model.ErrorMessage = "Error picking restaurant";
                 model.ButtonText = "Choose Where to Eat!";
                 model.SelectedRestaurant = null;
                 _logger.LogError(ex, "Error picking restaurant");
