@@ -50,7 +50,7 @@ namespace wheredoyouwanttoeat2.Controllers
                 _logger.LogError(ex, "Error retrieving restaurants");
                 var model = new ViewModel.RestaurantAdmin
                 {
-                    ErrorMessage = $"Error retrieiving restaurants: {ex.Message}"
+                    ErrorMessage = "Error retrieiving restaurants"
                 };
                 return View(model);
             }
@@ -419,7 +419,7 @@ namespace wheredoyouwanttoeat2.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting restaurant");
-                return RedirectToAction("Restaurants", new ViewModel.RestaurantAdmin { ErrorMessage = $"Error deleting restaurant: {ex.Message}" });
+                return RedirectToAction("Restaurants", new ViewModel.RestaurantAdmin { ErrorMessage = "Error deleting restaurant" });
             }
 
             return RedirectToAction("Restaurants");

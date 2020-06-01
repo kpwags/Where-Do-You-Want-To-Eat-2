@@ -28,7 +28,8 @@ namespace wheredoyouwanttoeat2.Controllers
 
         public IActionResult Register()
         {
-            return View();
+            var model = new ViewModel.Register();
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -59,16 +60,18 @@ namespace wheredoyouwanttoeat2.Controllers
                 }
                 catch (Exception ex)
                 {
+                    model.ErrorMessage = $"Error registerring user: {ex.Message}";
                     _logger.LogError(ex, "Error registerring user");
                 }
             }
 
-            return View();
+            return View(model);
         }
 
         public IActionResult Login()
         {
-            return View();
+            var model = new ViewModel.Login();
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -94,11 +97,12 @@ namespace wheredoyouwanttoeat2.Controllers
                         }
                     }
 
-                    ModelState.AddModelError(nameof(model.Email), "Login Failed: User Not Found");
+                    model.ErrorMessage = "Invalid email address or password";
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, $"Error loggin in user: {model.Email}");
+                    model.ErrorMessage = "Invalid email address or password";
                 }
 
             }
@@ -140,12 +144,13 @@ namespace wheredoyouwanttoeat2.Controllers
 
                     if (!result.Succeeded)
                     {
-                        ModelState.AddModelError(nameof(model.Email), "Error updating user profile");
+                        model.ErrorMessage = "Error updating user profile";
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, $"Error saving profile changes for {model.Email}");
+                    model.ErrorMessage = "Error updating user profile";
                 }
             }
 
@@ -154,7 +159,8 @@ namespace wheredoyouwanttoeat2.Controllers
 
         public IActionResult ChangePassword()
         {
-            return View();
+            var model = new ViewModel.ChangePassword();
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -176,6 +182,7 @@ namespace wheredoyouwanttoeat2.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error changing password");
+                    model.ErrorMessage = "Error changing password";
                 }
             }
 
@@ -184,7 +191,8 @@ namespace wheredoyouwanttoeat2.Controllers
 
         public IActionResult DownloadData()
         {
-            return View();
+            var model = new ViewModel.DownloadData();
+            return View(model);
         }
 
         [HttpGet]
