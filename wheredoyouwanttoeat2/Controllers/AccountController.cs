@@ -38,6 +38,8 @@ namespace wheredoyouwanttoeat2.Controllers
         [Route("register")]
         public async Task<IActionResult> Register(ViewModel.Register model)
         {
+            model.ClearMessages();
+
             if (ModelState.IsValid)
             {
                 try
@@ -78,6 +80,8 @@ namespace wheredoyouwanttoeat2.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(ViewModel.Login model)
         {
+            model.ClearMessages();
+
             if (ModelState.IsValid)
             {
                 try
@@ -131,6 +135,8 @@ namespace wheredoyouwanttoeat2.Controllers
         [Route("edit-profile")]
         public async Task<IActionResult> EditProfile(ViewModel.EditProfile model)
         {
+            model.ClearMessages();
+
             if (ModelState.IsValid)
             {
                 try
@@ -142,7 +148,11 @@ namespace wheredoyouwanttoeat2.Controllers
 
                     var result = await _service.UpdateUserProfile(loggedInUser);
 
-                    if (!result.Succeeded)
+                    if (result.Succeeded)
+                    {
+                        model.SuccessMessage = "Profile updated successfully";
+                    }
+                    else
                     {
                         model.ErrorMessage = "Error updating user profile";
                     }
@@ -168,6 +178,8 @@ namespace wheredoyouwanttoeat2.Controllers
         [Route("change-password")]
         public async Task<IActionResult> ChangePassword(ViewModel.ChangePassword model)
         {
+            model.ClearMessages();
+
             if (ModelState.IsValid)
             {
                 try
@@ -176,7 +188,11 @@ namespace wheredoyouwanttoeat2.Controllers
 
                     var result = await _service.ChangeUserPassword(loggedInUser, model.CurrentPassword, model.Password);
 
-                    if (!result.Succeeded)
+                    if (result.Succeeded)
+                    {
+                        model.SuccessMessage = "Password changed successfully";
+                    }
+                    else
                     {
                         ModelState.AddModelError(nameof(model.CurrentPassword), "Incorrect password");
                     }
@@ -296,6 +312,8 @@ namespace wheredoyouwanttoeat2.Controllers
         [Route("delete-account")]
         public async Task<IActionResult> DeleteAccount(ViewModel.DeleteAccount model)
         {
+            model.ClearMessages();
+
             if (ModelState.IsValid)
             {
                 try

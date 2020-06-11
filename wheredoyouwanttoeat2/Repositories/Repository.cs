@@ -26,7 +26,7 @@ namespace wheredoyouwanttoeat2.Respositories
 
         public IQueryable<T> Get(Expression<Func<T, bool>> expression)
         {
-            return _db.Set<T>().Where(expression).AsNoTracking();
+            return _db.Set<T>().Where(expression);
         }
 
         public async Task Add(T entity)

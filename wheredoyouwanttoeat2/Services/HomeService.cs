@@ -19,7 +19,9 @@ namespace wheredoyouwanttoeat2.Services
 
         public IEnumerable<Tag> GetUserTags(string userId)
         {
-            return _restaurantTagRepository.Get(rt => rt.Restaurant.UserId == userId).Select(rt => rt.Tag);
+            var tags = _restaurantTagRepository.Get(rt => rt.Restaurant.UserId == userId).OrderBy(rt => rt.Tag.Name).Select(rt => rt.Tag);
+
+            return tags.AsEnumerable().GroupBy(t => t.TagId).Select(t => t.First()).ToList();
         }
 
         public IEnumerable<Restaurant> GetUserRestaurants(string userId)

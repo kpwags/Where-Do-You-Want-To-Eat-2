@@ -75,6 +75,8 @@ namespace wheredoyouwanttoeat2.Controllers
         {
             var loggedInUser = await GetCurrentUserAsync();
 
+            model.ClearMessages();
+
             try
             {
                 int choiceCount = 1;

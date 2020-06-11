@@ -15,6 +15,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using wheredoyouwanttoeat2.Models;
 using wheredoyouwanttoeat2.Classes;
+using wheredoyouwanttoeat2.Services;
+using wheredoyouwanttoeat2.Services.Interfaces;
+using wheredoyouwanttoeat2.Respositories;
+using wheredoyouwanttoeat2.Respositories.Interfaces;
 
 namespace wheredoyouwanttoeat2
 {
@@ -43,6 +47,12 @@ namespace wheredoyouwanttoeat2
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddTransient<IRepository<Restaurant>, Repository<Restaurant>>();
+            services.AddTransient<IRepository<RestaurantTag>, Repository<RestaurantTag>>();
+            services.AddTransient<IRepository<Tag>, Repository<Tag>>();
+            services.AddTransient<IHomeService, HomeService>();
+            services.AddTransient<IAdminService, AdminService>();
+            services.AddTransient<IAccountService, AccountService>();
             services.AddControllersWithViews();
 
             services.AddRazorPages();
