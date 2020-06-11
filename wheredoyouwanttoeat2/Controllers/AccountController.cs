@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using wheredoyouwanttoeat2.Data;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using wheredoyouwanttoeat2.Services.Interfaces;
 using System;
 
 namespace wheredoyouwanttoeat2.Controllers
@@ -16,14 +17,14 @@ namespace wheredoyouwanttoeat2.Controllers
         private readonly ILogger _logger;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        protected ApplicationDbContext _db;
+        private readonly IAccountService _service;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext dbContext, ILogger<AccountController> logger)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IAccountService service, ILogger<AccountController> logger)
         {
-            this._userManager = userManager;
-            this._signInManager = signInManager;
-            this._db = dbContext;
-            this._logger = logger;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _service = service;
+            _logger = logger;
         }
 
         [Route("register")]
@@ -48,16 +49,12 @@ namespace wheredoyouwanttoeat2.Controllers
                         Email = model.Email,
                     };
 
-                    var result = await _userManager.CreateAsync(user, model.Password);
+                    var result = await _service.RegisterUser(user, model.Password);
+
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToAction("Index", "Home");
-                    }
-
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
                     }
                 }
                 catch (Exception ex)
@@ -85,21 +82,17 @@ namespace wheredoyouwanttoeat2.Controllers
             {
                 try
                 {
-                    var user = await _userManager.FindByEmailAsync(model.Email);
-                    if (user != null)
-                    {
-                        await _signInManager.SignOutAsync();
-                        Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
+                    bool successfulLogin = await _service.LoginUser(model.Email, model.Password);
 
-                        if (result.Succeeded)
-                        {
-                            return RedirectToAction("Index", "Home");
-                        }
-                        else
-                        {
-                            _logger.LogInformation($"Failed login attempt for {model.Email} (IP: {HttpContext.Connection.RemoteIpAddress})");
-                        }
+                    if (successfulLogin)
+                    {
+                        return RedirectToAction("Index", "Home");
                     }
+                    else
+                    {
+                        _logger.LogInformation($"Failed login attempt for {model.Email} (IP: {HttpContext.Connection.RemoteIpAddress})");
+                    }
+
 
                     model.ErrorMessage = "Invalid email address or password";
                 }
@@ -108,8 +101,8 @@ namespace wheredoyouwanttoeat2.Controllers
                     _logger.LogError(ex, $"Error loggin in user: {model.Email}");
                     model.ErrorMessage = "Invalid email address or password";
                 }
-
             }
+
             return View(model);
         }
 
@@ -147,7 +140,7 @@ namespace wheredoyouwanttoeat2.Controllers
                     loggedInUser.Email = model.Email;
                     loggedInUser.Name = model.Name;
 
-                    var result = await _userManager.UpdateAsync(loggedInUser);
+                    var result = await _service.UpdateUserProfile(loggedInUser);
 
                     if (!result.Succeeded)
                     {
@@ -181,7 +174,7 @@ namespace wheredoyouwanttoeat2.Controllers
                 {
                     var loggedInUser = await GetCurrentUserAsync();
 
-                    var result = await _userManager.ChangePasswordAsync(loggedInUser, model.CurrentPassword, model.Password);
+                    var result = await _service.ChangeUserPassword(loggedInUser, model.CurrentPassword, model.Password);
 
                     if (!result.Succeeded)
                     {
@@ -226,7 +219,7 @@ namespace wheredoyouwanttoeat2.Controllers
                     Restaurants = new List<Classes.DownloadData.Restaurant>()
                 };
 
-                var restaurants = _db.Restaurants.Where(r => r.UserId == loggedInUser.Id).OrderBy(r => r.Name).ToList();
+                var restaurants = _service.GetUserRestaurants(loggedInUser.Id).OrderBy(r => r.Name).ToList();
 
                 foreach (var restaurant in restaurants)
                 {
@@ -309,26 +302,21 @@ namespace wheredoyouwanttoeat2.Controllers
                 {
                     var loggedInUser = await GetCurrentUserAsync();
 
-                    Microsoft.AspNetCore.Identity.SignInResult passwordResult = await _signInManager.CheckPasswordSignInAsync(loggedInUser, model.Password, false);
+                    var errorMessage = await _service.DeleteUserAccount(loggedInUser, model.Password);
 
-                    if (!passwordResult.Succeeded)
+                    switch (errorMessage)
                     {
-                        ModelState.AddModelError(nameof(model.Password), "Invalid password");
-                        return View(model);
+                        case "Invalid password":
+                            ModelState.AddModelError(nameof(model.Password), "Invalid password");
+                            return View(model);
+
+                        case "Error deleting account":
+                            model.ErrorMessage = "Error deleting account";
+                            return View(model);
+
+                        default:
+                            return RedirectToAction("Index", "Home");
                     }
-
-                    await _signInManager.SignOutAsync();
-
-                    await DeleteUserRestaurants(loggedInUser);
-
-                    var result = await _userManager.DeleteAsync(loggedInUser);
-
-                    if (!result.Succeeded)
-                    {
-                        model.ErrorMessage = "Error deleting account";
-                    }
-
-                    return RedirectToAction("Index", "Home");
                 }
                 catch (Exception ex)
                 {
@@ -340,47 +328,7 @@ namespace wheredoyouwanttoeat2.Controllers
             return View(model);
         }
 
-        protected async Task DeleteUserRestaurants(User user)
-        {
-            var restaurants = _db.Restaurants.Where(r => r.UserId == user.Id).OrderBy(r => r.Name).ToList();
 
-            foreach (var restaurant in restaurants)
-            {
-                List<RestaurantTag> restaurantTags = _db.RestaurantTags.Where(rt => rt.RestaurantId == restaurant.RestaurantId).ToList();
-                List<int> tagIds = new List<int>();
-                foreach (RestaurantTag restaurantTag in restaurantTags)
-                {
-                    // save to list for possible cleanup
-                    tagIds.Add(restaurantTag.TagId);
-
-                    _db.RestaurantTags.Remove(restaurantTag);
-                    await _db.SaveChangesAsync();
-                }
-
-                List<int> tagsToDelete = new List<int>();
-                foreach (int tagId in tagIds)
-                {
-                    if (_db.RestaurantTags.Where(rt => rt.TagId == tagId).Count() == 0)
-                    {
-                        // it's not used anywhere else, let's delete it to keep the database cleaner
-                        tagsToDelete.Add(tagId);
-                    }
-                }
-
-                // delete unused tags
-                foreach (int tagId in tagsToDelete)
-                {
-                    var tagToDelete = _db.Tags.Where(t => t.TagId == tagId).FirstOrDefault();
-                    if (tagToDelete != null)
-                    {
-                        _db.Tags.Remove(tagToDelete);
-                        await _db.SaveChangesAsync();
-                    }
-                }
-            }
-
-            _db.Restaurants.RemoveRange(restaurants);
-        }
 
         protected Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }

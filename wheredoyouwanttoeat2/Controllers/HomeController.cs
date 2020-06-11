@@ -10,14 +10,16 @@ using wheredoyouwanttoeat2.ViewModel;
 using wheredoyouwanttoeat2.Models;
 using Microsoft.Extensions.Logging;
 using wheredoyouwanttoeat2.Classes;
+using wheredoyouwanttoeat2.Services.Interfaces;
 
 namespace wheredoyouwanttoeat2.Controllers
 {
     public class HomeController : BaseController
     {
-        public HomeController(UserManager<User> manager, ApplicationDbContext dbContext, ILogger<HomeController> logger) : base(manager, dbContext, logger)
+        private readonly IHomeService _service;
+        public HomeController(UserManager<User> manager, ILogger<HomeController> logger, IHomeService service) : base(manager, logger)
         {
-
+            _service = service;
         }
 
         public async Task<IActionResult> Index()
@@ -39,9 +41,9 @@ namespace wheredoyouwanttoeat2.Controllers
                 {
                     TempData["choice_count"] = 0;
 
-                    var tags = _db.RestaurantTags.Where(rt => rt.Restaurant.UserId == loggedInUser.Id).Select(rt => rt.Tag).ToList();
+                    var tags = _service.GetUserTags(loggedInUser.Id).ToList();
 
-                    viewModel.RestaurantCount = _db.Restaurants.Count(r => r.UserId == loggedInUser.Id);
+                    viewModel.RestaurantCount = _service.GetUserRestaurants(loggedInUser.Id).Count();
                     viewModel.Tags = tags;
                 }
                 catch (Exception ex)
@@ -83,22 +85,22 @@ namespace wheredoyouwanttoeat2.Controllers
 
                 TempData["choice_count"] = choiceCount;
 
-                model.RestaurantCount = _db.Restaurants.Count(r => r.UserId == loggedInUser.Id);
-                var userTagsCount = _db.RestaurantTags.Count(rt => rt.Restaurant.UserId == loggedInUser.Id);
+                model.RestaurantCount = _service.GetUserRestaurants(loggedInUser.Id).Count();
+                var userTagsCount = _service.GetUserTags(loggedInUser.Id).Count();
 
                 List<Restaurant> restaurants = new List<Restaurant>();
 
                 if (userTagsCount == 0)
                 {
                     // user doesn't have any tags, just randomly choose a restaurant
-                    restaurants = _db.Restaurants.Where(r => r.UserId == loggedInUser.Id).ToList();
+                    restaurants = _service.GetUserRestaurants(loggedInUser.Id).ToList();
                 }
                 else
                 {
                     if (model.Tags.Count(t => t.Selected) > 0)
                     {
                         List<int> selectedTags = model.Tags.Where(t => t.Selected).Select(t => t.TagId).ToList();
-                        restaurants = _db.RestaurantTags.Where(rt => selectedTags.Contains(rt.TagId)).Select(rt => rt.Restaurant).ToList();
+                        restaurants = _service.GetUserRestaurantsWithTags(loggedInUser.Id, selectedTags).ToList();
                     }
                     else
                     {
