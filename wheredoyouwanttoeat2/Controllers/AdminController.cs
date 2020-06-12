@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using wheredoyouwanttoeat2.Classes;
 using wheredoyouwanttoeat2.Services.Interfaces;
 using wheredoyouwanttoeat2.Models;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
@@ -18,20 +16,19 @@ namespace wheredoyouwanttoeat2.Controllers
     {
         private readonly IAdminService _service;
 
-        public AdminController(UserManager<User> manager, ILogger<AdminController> logger, IAdminService service) : base(manager, logger)
+        public AdminController(IUserProvider provider, ILogger<AdminController> logger, IAdminService service) : base(provider, logger)
         {
             _service = service;
         }
 
         [Route("/admin/restaurants")]
-        public async Task<IActionResult> Restaurants()
+        public IActionResult Restaurants()
         {
             try
             {
-                var loggedInUser = await GetCurrentUserAsync();
                 var model = new ViewModel.RestaurantAdmin
                 {
-                    Restaurants = _service.GetUserRestaurants(loggedInUser.Id).OrderBy(r => r.Name).ToList()
+                    Restaurants = _service.GetUserRestaurants().OrderBy(r => r.Name).ToList()
                 };
 
                 if (TempData["errormessage"] != null)
@@ -70,7 +67,7 @@ namespace wheredoyouwanttoeat2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var loggedInUser = await GetCurrentUserAsync();
+                var loggedInUser = await _userProvider.GetLoggedInUserAsync();
 
                 Restaurant restaurant;
 

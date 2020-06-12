@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -53,6 +53,7 @@ namespace wheredoyouwanttoeat2
             services.AddTransient<IHomeService, HomeService>();
             services.AddTransient<IAdminService, AdminService>();
             services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IUserProvider, UserProvider>();
             services.AddControllersWithViews();
 
             services.AddRazorPages();

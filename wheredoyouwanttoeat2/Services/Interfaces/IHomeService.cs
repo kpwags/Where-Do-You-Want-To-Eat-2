@@ -5,10 +5,10 @@ namespace wheredoyouwanttoeat2.Services.Interfaces
 {
     public interface IHomeService
     {
-        IEnumerable<Tag> GetUserTags(string userId);
+        IEnumerable<Tag> GetUserTags(string userId = "");
 
-        IEnumerable<Restaurant> GetUserRestaurants(string userId);
+        IEnumerable<Restaurant> GetUserRestaurants(string userId = "");
 
-        IEnumerable<Restaurant> GetUserRestaurantsWithTags(string userId, List<int> tags);
+        IEnumerable<Restaurant> GetUserRestaurantsWithTags(List<int> tags, string userId = "");
     }
 }

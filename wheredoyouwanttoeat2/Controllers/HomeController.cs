@@ -17,14 +17,15 @@ namespace wheredoyouwanttoeat2.Controllers
     public class HomeController : BaseController
     {
         private readonly IHomeService _service;
-        public HomeController(UserManager<User> manager, ILogger<HomeController> logger, IHomeService service) : base(manager, logger)
+
+        public HomeController(IUserProvider provider, ILogger<HomeController> logger, IHomeService service) : base(provider, logger)
         {
             _service = service;
         }
 
         public async Task<IActionResult> Index()
         {
-            var loggedInUser = await GetCurrentUserAsync();
+            var loggedInUser = await _userProvider.GetLoggedInUserAsync();
             var viewModel = new Randomizer
             {
                 RestaurantCount = 0,
@@ -73,9 +74,14 @@ namespace wheredoyouwanttoeat2.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(Randomizer model)
         {
-            var loggedInUser = await GetCurrentUserAsync();
+            var loggedInUser = await _userProvider.GetLoggedInUserAsync();
 
             model.ClearMessages();
+
+            if (loggedInUser == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
             try
             {
@@ -102,7 +108,7 @@ namespace wheredoyouwanttoeat2.Controllers
                     if (model.Tags.Count(t => t.Selected) > 0)
                     {
                         List<int> selectedTags = model.Tags.Where(t => t.Selected).Select(t => t.TagId).ToList();
-                        restaurants = _service.GetUserRestaurantsWithTags(loggedInUser.Id, selectedTags).ToList();
+                        restaurants = _service.GetUserRestaurantsWithTags(selectedTags, loggedInUser.Id).ToList();
                     }
                     else
                     {

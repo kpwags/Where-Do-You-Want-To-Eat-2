@@ -7,16 +7,16 @@ namespace wheredoyouwanttoeat2.Services.Interfaces
 {
     public interface IAccountService
     {
-        Task<IdentityResult> RegisterUser(User user, string password);
+        Task<bool> RegisterUserAsync(User user, string password);
 
-        Task<bool> LoginUser(string email, string password);
+        Task<bool> LoginUserAsync(string email, string password);
 
-        Task<IdentityResult> UpdateUserProfile(User user);
+        Task<bool> UpdateUserProfileAsync(string email, string name);
 
-        Task<IdentityResult> ChangeUserPassword(User user, string currentPassword, string newPassword);
+        Task<bool> ChangeUserPasswordAsync(string currentPassword, string newPassword);
 
-        Task<string> DeleteUserAccount(User user, string password);
+        Task<string> DeleteUserAccountAsync(string password);
 
-        IEnumerable<Restaurant> GetUserRestaurants(string userId);
+        IEnumerable<Restaurant> GetUserRestaurants();
     }
 }

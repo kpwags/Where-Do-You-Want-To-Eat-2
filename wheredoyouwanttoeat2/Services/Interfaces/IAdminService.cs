@@ -6,7 +6,7 @@ namespace wheredoyouwanttoeat2.Services.Interfaces
 {
     public interface IAdminService
     {
-        IEnumerable<Restaurant> GetUserRestaurants(string userId);
+        IEnumerable<Restaurant> GetUserRestaurants(string userId = "");
 
         Restaurant GetRestaurantById(int id);
 

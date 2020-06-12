@@ -14,16 +14,23 @@ namespace wheredoyouwanttoeat2.Services
         private readonly IRepository<Restaurant> _restaurantRepository;
         private readonly IRepository<RestaurantTag> _restaurantTagRepository;
         private readonly IRepository<Tag> _tagRepository;
+        private readonly IUserProvider _userProvider;
 
-        public AdminService(IRepository<Restaurant> restaurantRepository, IRepository<RestaurantTag> restaurantTagRepository, IRepository<Tag> tagRepository)
+        public AdminService(IRepository<Restaurant> restaurantRepository, IRepository<RestaurantTag> restaurantTagRepository, IRepository<Tag> tagRepository, IUserProvider provider)
         {
             _restaurantRepository = restaurantRepository;
             _restaurantTagRepository = restaurantTagRepository;
             _tagRepository = tagRepository;
+            _userProvider = provider;
         }
 
-        public IEnumerable<Restaurant> GetUserRestaurants(string userId)
+        public IEnumerable<Restaurant> GetUserRestaurants(string userId = "")
         {
+            if (userId == "")
+            {
+                userId = _userProvider.GetUserId();
+            }
+
             return _restaurantRepository.Get(r => r.UserId == userId);
         }
 

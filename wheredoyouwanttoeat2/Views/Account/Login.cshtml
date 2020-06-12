@@ -10,6 +10,8 @@
         <partial name="_ErrorMessage" model="@Model.ErrorMessage" />
 
         <form asp-action="Login" class="mt-4">
+            <input type="hidden" asp-for="@Model.ReturnUrl" />
+
             <div class="form-group">
                 <label asp-for="Email"></label>
                 <input asp-for="Email" class="form-control" />

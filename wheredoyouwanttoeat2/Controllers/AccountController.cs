@@ -1,10 +1,10 @@
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using wheredoyouwanttoeat2.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using wheredoyouwanttoeat2.Data;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using wheredoyouwanttoeat2.Services.Interfaces;
@@ -12,21 +12,23 @@ using System;
 
 namespace wheredoyouwanttoeat2.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly ILogger _logger;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly IAccountService _service;
+        private readonly IUserProvider _userProvider;
+        private readonly SignInManager<User> _signInManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IAccountService service, ILogger<AccountController> logger)
+        public AccountController(IUserProvider provider, SignInManager<User> signInManager, IAccountService service, ILogger<AccountController> logger)
         {
-            _userManager = userManager;
+            _userProvider = provider;
             _signInManager = signInManager;
             _service = service;
             _logger = logger;
         }
 
+        [AllowAnonymous]
         [Route("register")]
         public IActionResult Register()
         {
@@ -34,6 +36,7 @@ namespace wheredoyouwanttoeat2.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("register")]
         public async Task<IActionResult> Register(ViewModel.Register model)
@@ -51,11 +54,10 @@ namespace wheredoyouwanttoeat2.Controllers
                         Email = model.Email,
                     };
 
-                    var result = await _service.RegisterUser(user, model.Password);
+                    var result = await _service.RegisterUserAsync(user, model.Password);
 
-                    if (result.Succeeded)
+                    if (result)
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -69,15 +71,20 @@ namespace wheredoyouwanttoeat2.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [Route("login")]
-        public IActionResult Login()
+        [Route("account/login/{ReturnUrl?}")]
+        public IActionResult Login(string ReturnUrl = "")
         {
             var model = new ViewModel.Login();
+            model.ReturnUrl = ReturnUrl;
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("login")]
+        [Route("account/login")]
         public async Task<IActionResult> Login(ViewModel.Login model)
         {
             model.ClearMessages();
@@ -86,23 +93,33 @@ namespace wheredoyouwanttoeat2.Controllers
             {
                 try
                 {
-                    bool successfulLogin = await _service.LoginUser(model.Email, model.Password);
-
-                    if (successfulLogin)
+                    var user = await _userProvider.GetByEmail(model.Email);
+                    if (user != null)
                     {
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"Failed login attempt for {model.Email} (IP: {HttpContext.Connection.RemoteIpAddress})");
-                    }
+                        await _signInManager.SignOutAsync();
 
+                        var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
+
+                        if (result.Succeeded)
+                        {
+                            if (model.ReturnUrl != null && model.ReturnUrl != "")
+                            {
+                                return Redirect(model.ReturnUrl);
+                            }
+
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            _logger.LogInformation($"Failed login attempt for {model.Email} (IP: {HttpContext.Connection.RemoteIpAddress})");
+                        }
+                    }
 
                     model.ErrorMessage = "Invalid email address or password";
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Error loggin in user: {model.Email}");
+                    _logger.LogError(ex, $"Error logging in user: {model.Email}");
                     model.ErrorMessage = "Invalid email address or password";
                 }
             }
@@ -110,6 +127,7 @@ namespace wheredoyouwanttoeat2.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -120,7 +138,7 @@ namespace wheredoyouwanttoeat2.Controllers
         [Route("edit-profile")]
         public async Task<IActionResult> EditProfile()
         {
-            var loggedInUser = await GetCurrentUserAsync();
+            var loggedInUser = await _userProvider.GetLoggedInUserAsync();
 
             var editProfile = new ViewModel.EditProfile
             {
@@ -130,6 +148,7 @@ namespace wheredoyouwanttoeat2.Controllers
 
             return View(editProfile);
         }
+
 
         [HttpPost, ValidateAntiForgeryToken]
         [Route("edit-profile")]
@@ -141,14 +160,9 @@ namespace wheredoyouwanttoeat2.Controllers
             {
                 try
                 {
-                    var loggedInUser = await GetCurrentUserAsync();
+                    var result = await _service.UpdateUserProfileAsync(model.Email, model.Name);
 
-                    loggedInUser.Email = model.Email;
-                    loggedInUser.Name = model.Name;
-
-                    var result = await _service.UpdateUserProfile(loggedInUser);
-
-                    if (result.Succeeded)
+                    if (result)
                     {
                         model.SuccessMessage = "Profile updated successfully";
                     }
@@ -184,11 +198,9 @@ namespace wheredoyouwanttoeat2.Controllers
             {
                 try
                 {
-                    var loggedInUser = await GetCurrentUserAsync();
+                    var result = await _service.ChangeUserPasswordAsync(model.CurrentPassword, model.Password);
 
-                    var result = await _service.ChangeUserPassword(loggedInUser, model.CurrentPassword, model.Password);
-
-                    if (result.Succeeded)
+                    if (result)
                     {
                         model.SuccessMessage = "Password changed successfully";
                     }
@@ -219,7 +231,7 @@ namespace wheredoyouwanttoeat2.Controllers
         {
             try
             {
-                var loggedInUser = await GetCurrentUserAsync();
+                var loggedInUser = await _userProvider.GetLoggedInUserAsync();
 
                 var UserData = new Classes.DownloadData.UserData
                 {
@@ -235,7 +247,7 @@ namespace wheredoyouwanttoeat2.Controllers
                     Restaurants = new List<Classes.DownloadData.Restaurant>()
                 };
 
-                var restaurants = _service.GetUserRestaurants(loggedInUser.Id).OrderBy(r => r.Name).ToList();
+                var restaurants = _service.GetUserRestaurants().OrderBy(r => r.Name).ToList();
 
                 foreach (var restaurant in restaurants)
                 {
@@ -318,9 +330,7 @@ namespace wheredoyouwanttoeat2.Controllers
             {
                 try
                 {
-                    var loggedInUser = await GetCurrentUserAsync();
-
-                    var errorMessage = await _service.DeleteUserAccount(loggedInUser, model.Password);
+                    var errorMessage = await _service.DeleteUserAccountAsync(model.Password);
 
                     switch (errorMessage)
                     {
@@ -345,9 +355,5 @@ namespace wheredoyouwanttoeat2.Controllers
 
             return View(model);
         }
-
-
-
-        protected Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

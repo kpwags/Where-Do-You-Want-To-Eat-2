@@ -15,29 +15,38 @@ namespace wheredoyouwanttoeat2.Services
         private readonly IRepository<Restaurant> _restaurantRepository;
         private readonly IRepository<RestaurantTag> _restaurantTagRepository;
         private readonly IRepository<Tag> _tagRepository;
+        private readonly IUserProvider _userProvider;
 
-        public AccountService(UserManager<User> userManager, SignInManager<User> signInManager, IRepository<Restaurant> restaurantRepository, IRepository<RestaurantTag> restaurantTagRepository, IRepository<Tag> tagRepository)
+        public AccountService(UserManager<User> userManager, SignInManager<User> signInManager, IRepository<Restaurant> restaurantRepository, IRepository<RestaurantTag> restaurantTagRepository, IRepository<Tag> tagRepository, IUserProvider provider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _restaurantRepository = restaurantRepository;
             _restaurantTagRepository = restaurantTagRepository;
             _tagRepository = tagRepository;
+            _userProvider = provider;
         }
 
-        public async Task<IdentityResult> RegisterUser(User user, string password)
+        public async Task<bool> RegisterUserAsync(User user, string password)
         {
-            return await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+            }
+
+            return result.Succeeded;
         }
 
-        public async Task<bool> LoginUser(string email, string password)
+        public async Task<bool> LoginUserAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
                 await _signInManager.SignOutAsync();
 
-                Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, password, true, false);
+                var result = await _signInManager.PasswordSignInAsync(user, password, true, false);
 
                 if (result.Succeeded)
                 {
@@ -48,18 +57,32 @@ namespace wheredoyouwanttoeat2.Services
             return false;
         }
 
-        public async Task<IdentityResult> UpdateUserProfile(User user)
+        public async Task<bool> UpdateUserProfileAsync(string email, string name)
         {
-            return await _userManager.UpdateAsync(user);
+            var user = await _userProvider.GetLoggedInUserAsync();
+
+            user.Email = email;
+            user.UserName = email;
+            user.Name = name;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded;
         }
 
-        public async Task<IdentityResult> ChangeUserPassword(User user, string currentPassword, string newPassword)
+        public async Task<bool> ChangeUserPasswordAsync(string currentPassword, string newPassword)
         {
-            return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            var user = await _userProvider.GetLoggedInUserAsync();
+
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+            return result.Succeeded;
         }
 
-        public async Task<string> DeleteUserAccount(User user, string password)
+        public async Task<string> DeleteUserAccountAsync(string password)
         {
+            var user = await _userProvider.GetLoggedInUserAsync();
+
             var passwordResult = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
             if (!passwordResult.Succeeded)
@@ -81,8 +104,9 @@ namespace wheredoyouwanttoeat2.Services
             return "";
         }
 
-        public IEnumerable<Restaurant> GetUserRestaurants(string userId)
+        public IEnumerable<Restaurant> GetUserRestaurants()
         {
+            string userId = _userProvider.GetUserId();
             return _restaurantRepository.Get(r => r.UserId == userId);
         }
 
