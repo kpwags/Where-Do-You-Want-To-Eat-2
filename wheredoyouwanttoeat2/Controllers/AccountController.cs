@@ -71,7 +71,6 @@ namespace wheredoyouwanttoeat2.Controllers
 
         [AllowAnonymous]
         [Route("login/{ReturnUrl?}")]
-        [Route("account/login/{ReturnUrl?}")]
         public IActionResult Login(string ReturnUrl = "")
         {
             var model = new ViewModel.Login();
@@ -82,7 +81,6 @@ namespace wheredoyouwanttoeat2.Controllers
         [AllowAnonymous]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("login")]
-        [Route("account/login")]
         public async Task<IActionResult> Login(ViewModel.Login model)
         {
             model.ClearMessages();

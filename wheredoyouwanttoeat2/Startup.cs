@@ -47,6 +47,12 @@ namespace wheredoyouwanttoeat2
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/login";
+                options.LogoutPath = $"/logout";
+            });
+
             services.AddTransient<IRepository<Restaurant>, Repository<Restaurant>>();
             services.AddTransient<IRepository<RestaurantTag>, Repository<RestaurantTag>>();
             services.AddTransient<IRepository<Tag>, Repository<Tag>>();
