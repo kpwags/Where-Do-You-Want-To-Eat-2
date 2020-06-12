@@ -11,6 +11,8 @@ namespace wheredoyouwanttoeat2.Services.Interfaces
 
         Task<bool> LoginUserAsync(string email, string password);
 
+        Task LogoutAsync();
+
         Task<bool> UpdateUserProfileAsync(string email, string name);
 
         Task<bool> ChangeUserPasswordAsync(string currentPassword, string newPassword);

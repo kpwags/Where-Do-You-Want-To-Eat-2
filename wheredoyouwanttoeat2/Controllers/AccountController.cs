@@ -18,12 +18,10 @@ namespace wheredoyouwanttoeat2.Controllers
         private readonly ILogger _logger;
         private readonly IAccountService _service;
         private readonly IUserProvider _userProvider;
-        private readonly SignInManager<User> _signInManager;
 
-        public AccountController(IUserProvider provider, SignInManager<User> signInManager, IAccountService service, ILogger<AccountController> logger)
+        public AccountController(IUserProvider provider, IAccountService service, ILogger<AccountController> logger)
         {
             _userProvider = provider;
-            _signInManager = signInManager;
             _service = service;
             _logger = logger;
         }
@@ -72,7 +70,7 @@ namespace wheredoyouwanttoeat2.Controllers
         }
 
         [AllowAnonymous]
-        [Route("login")]
+        [Route("login/{ReturnUrl?}")]
         [Route("account/login/{ReturnUrl?}")]
         public IActionResult Login(string ReturnUrl = "")
         {
@@ -93,26 +91,19 @@ namespace wheredoyouwanttoeat2.Controllers
             {
                 try
                 {
-                    var user = await _userProvider.GetByEmail(model.Email);
-                    if (user != null)
+                    bool loginSuccessful = await _service.LoginUserAsync(model.Email, model.Password);
+                    if (loginSuccessful)
                     {
-                        await _signInManager.SignOutAsync();
-
-                        var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
-
-                        if (result.Succeeded)
+                        if (model.ReturnUrl != null && model.ReturnUrl != "")
                         {
-                            if (model.ReturnUrl != null && model.ReturnUrl != "")
-                            {
-                                return Redirect(model.ReturnUrl);
-                            }
+                            return Redirect(model.ReturnUrl);
+                        }
 
-                            return RedirectToAction("Index", "Home");
-                        }
-                        else
-                        {
-                            _logger.LogInformation($"Failed login attempt for {model.Email} (IP: {HttpContext.Connection.RemoteIpAddress})");
-                        }
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"Failed login attempt for {model.Email} (IP: {HttpContext.Connection.RemoteIpAddress})");
                     }
 
                     model.ErrorMessage = "Invalid email address or password";
@@ -131,7 +122,7 @@ namespace wheredoyouwanttoeat2.Controllers
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await _service.LogoutAsync();
             return RedirectToAction("Index", "Home");
         }
 

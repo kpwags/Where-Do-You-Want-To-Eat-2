@@ -57,6 +57,11 @@ namespace wheredoyouwanttoeat2.Services
             return false;
         }
 
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
         public async Task<bool> UpdateUserProfileAsync(string email, string name)
         {
             var user = await _userProvider.GetLoggedInUserAsync();
