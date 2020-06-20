@@ -90,7 +90,7 @@ namespace wheredoyouwanttoeat2.Controllers
                         UserId = loggedInUser.Id
                     };
 
-                    await _service.AddRestaurant(restaurant);
+                    restaurant = await _service.AddRestaurant(restaurant);
                 }
                 catch (Exception ex)
                 {

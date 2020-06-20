@@ -39,7 +39,7 @@ namespace wheredoyouwanttoeat2.Services
             return _restaurantRepository.Get(r => r.RestaurantId == id).FirstOrDefault();
         }
 
-        public async Task AddRestaurant(Restaurant restaurant)
+        public async Task<Restaurant> AddRestaurant(Restaurant restaurant)
         {
             await _restaurantRepository.Add(restaurant);
 
@@ -61,6 +61,8 @@ namespace wheredoyouwanttoeat2.Services
                     throw new Exception($"Error retrieving latitude and longitude from MapQuest API {ex.Message}");
                 }
             }
+
+            return restaurant;
         }
 
         public async Task AddTagsToRestaurant(Restaurant restaurant, List<string> tags)

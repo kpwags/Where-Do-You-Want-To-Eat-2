@@ -1,5 +1,6 @@
 using Moq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using wheredoyouwanttoeat2.Models;
 using wheredoyouwanttoeat2.Services.Interfaces;
 
@@ -35,6 +36,19 @@ namespace wheredoyouwanttoeat2.tests.Mocks.Services
         {
             Setup(x => x.GetRestaurantTags(It.IsAny<int>()))
                 .Returns(restaurantTags);
+
+            return this;
+        }
+
+        public MockAdminService MockAddRestaurant(Restaurant restaurant)
+        {
+            if (!restaurant.IsValid())
+            {
+                throw new System.ComponentModel.DataAnnotations.ValidationException("Name is required");
+            }
+
+            Setup(x => x.AddRestaurant(It.IsAny<Restaurant>()))
+                .Returns(Task.FromResult(restaurant));
 
             return this;
         }

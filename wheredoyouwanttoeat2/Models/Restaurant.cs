@@ -112,5 +112,15 @@ namespace wheredoyouwanttoeat2.Models
 
             return true;
         }
+
+        public bool IsValid()
+        {
+            if (Name == null || Name.Trim() == "")
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

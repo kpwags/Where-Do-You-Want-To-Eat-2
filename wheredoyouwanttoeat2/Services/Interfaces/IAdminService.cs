@@ -10,7 +10,7 @@ namespace wheredoyouwanttoeat2.Services.Interfaces
 
         Restaurant GetRestaurantById(int id);
 
-        Task AddRestaurant(Restaurant restaurant);
+        Task<Restaurant> AddRestaurant(Restaurant restaurant);
 
         Task AddTagsToRestaurant(Restaurant restaurant, List<string> tags);
 
