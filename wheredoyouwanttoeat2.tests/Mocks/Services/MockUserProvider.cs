@@ -17,10 +17,10 @@ namespace wheredoyouwanttoeat2.tests.Mocks.Services
             return this;
         }
 
-        public MockUserProvider MockGetLoggedInUserAsync(Task<User> user)
+        public MockUserProvider MockGetLoggedInUserAsync(User user)
         {
             Setup(x => x.GetLoggedInUserAsync())
-                .Returns(user);
+                .Returns(Task.FromResult(user));
 
             return this;
         }

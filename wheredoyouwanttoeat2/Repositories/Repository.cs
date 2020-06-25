@@ -29,6 +29,11 @@ namespace wheredoyouwanttoeat2.Respositories
             return _db.Set<T>().Where(expression);
         }
 
+        public T GetById(object id)
+        {
+            return _db.Set<T>().Find(id);
+        }
+
         public async Task Add(T entity)
         {
             _db.Set<T>().Add(entity);

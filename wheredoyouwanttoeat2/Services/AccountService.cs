@@ -79,9 +79,13 @@ namespace wheredoyouwanttoeat2.Services
         {
             var user = await _userProvider.GetLoggedInUserAsync();
 
-            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (user != null)
+            {
+                var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+                return result.Succeeded;
+            }
 
-            return result.Succeeded;
+            return false;
         }
 
         public async Task<string> DeleteUserAccountAsync(string password)

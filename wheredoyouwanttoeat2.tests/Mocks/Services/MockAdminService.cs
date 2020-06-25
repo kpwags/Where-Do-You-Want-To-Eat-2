@@ -52,5 +52,20 @@ namespace wheredoyouwanttoeat2.tests.Mocks.Services
 
             return this;
         }
+
+        public MockAdminService MockUpdateRestaurant(Restaurant restaurant)
+        {
+            Setup(x => x.UpdateRestaurant(It.IsAny<Restaurant>(), It.IsAny<bool>()))
+                .Returns(Task.FromResult(restaurant));
+
+            return this;
+        }
+
+        public MockAdminService MockDeleteRestaurant(Restaurant restaurant)
+        {
+            Setup(x => x.DeleteRestaurant(It.IsAny<Restaurant>()));
+
+            return this;
+        }
     }
 }

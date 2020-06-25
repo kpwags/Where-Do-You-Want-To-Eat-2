@@ -1,9 +1,7 @@
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using wheredoyouwanttoeat2.Respositories.Interfaces;
 
 namespace wheredoyouwanttoeat2.tests.Mocks.Repositories
@@ -26,9 +24,31 @@ namespace wheredoyouwanttoeat2.tests.Mocks.Repositories
             return this;
         }
 
+        public MockRepository<T> MockGetById(T result)
+        {
+            Setup(x => x.GetById(It.IsAny<object>()))
+                .Returns(result);
+
+            return this;
+        }
+
         public MockRepository<T> MockAdd(T result)
         {
             Setup(x => x.Add(It.IsAny<T>()));
+
+            return this;
+        }
+
+        public MockRepository<T> MockUpdate(T result)
+        {
+            Setup(x => x.Update(It.IsAny<T>()));
+
+            return this;
+        }
+
+        public MockRepository<T> MockDelete(T result)
+        {
+            Setup(x => x.Delete(It.IsAny<T>()));
 
             return this;
         }

@@ -36,11 +36,16 @@ namespace wheredoyouwanttoeat2.Services
 
         public Restaurant GetRestaurantById(int id)
         {
-            return _restaurantRepository.Get(r => r.RestaurantId == id).FirstOrDefault();
+            return _restaurantRepository.GetById(id);
         }
 
         public async Task<Restaurant> AddRestaurant(Restaurant restaurant)
         {
+            if (!restaurant.IsValid())
+            {
+                throw new System.ComponentModel.DataAnnotations.ValidationException("Name is required");
+            }
+
             await _restaurantRepository.Add(restaurant);
 
             // if a full address was entered, get the latitude and longitude
@@ -171,8 +176,13 @@ namespace wheredoyouwanttoeat2.Services
             }
         }
 
-        public async Task UpdateRestaurant(Restaurant restaurant, bool updateCoordinates = false)
+        public async Task<Restaurant> UpdateRestaurant(Restaurant restaurant, bool updateCoordinates = false)
         {
+            if (!restaurant.IsValid())
+            {
+                throw new System.ComponentModel.DataAnnotations.ValidationException("Name is required");
+            }
+
             if (updateCoordinates || restaurant.Latitude == 0 || restaurant.Longitude == 0)
             {
                 try
@@ -188,6 +198,8 @@ namespace wheredoyouwanttoeat2.Services
             }
 
             await _restaurantRepository.Update(restaurant);
+
+            return restaurant;
         }
 
         public async Task DeleteRestaurant(Restaurant restaurant)

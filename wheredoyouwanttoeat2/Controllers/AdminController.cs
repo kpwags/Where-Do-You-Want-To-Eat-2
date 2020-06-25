@@ -90,12 +90,17 @@ namespace wheredoyouwanttoeat2.Controllers
                         UserId = loggedInUser.Id
                     };
 
+                    if (restaurant == null)
+                    {
+                        Console.WriteLine("new restaurant is null");
+                    }
+
                     restaurant = await _service.AddRestaurant(restaurant);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error saving restaurant");
-                    return RedirectToAction("Restaurants", "Admin");
+                    return View();
                 }
 
                 if (restaurant == null)

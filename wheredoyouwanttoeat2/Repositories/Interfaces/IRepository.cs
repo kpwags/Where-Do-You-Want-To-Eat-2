@@ -10,6 +10,7 @@ namespace wheredoyouwanttoeat2.Respositories.Interfaces
     {
         IQueryable<T> GetAll();
         IQueryable<T> Get(Expression<Func<T, bool>> expression);
+        T GetById(object id);
         Task Add(T entity);
         Task Update(T entity);
         Task Delete(T entity);

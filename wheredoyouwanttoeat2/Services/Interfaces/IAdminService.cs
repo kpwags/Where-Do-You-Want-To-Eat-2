@@ -18,7 +18,7 @@ namespace wheredoyouwanttoeat2.Services.Interfaces
 
         Task CleanUpTags(Restaurant restaurant, List<string> tags);
 
-        Task UpdateRestaurant(Restaurant restaurant, bool updateCoordinates = false);
+        Task<Restaurant> UpdateRestaurant(Restaurant restaurant, bool updateCoordinates = false);
 
         Task DeleteRestaurant(Restaurant restaurant);
 
