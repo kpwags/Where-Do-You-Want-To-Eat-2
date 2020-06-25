@@ -182,7 +182,7 @@ namespace wheredoyouwanttoeat2.tests.Services
         }
 
         [Fact]
-        public void AccountService_ChangeUserPassword_SuccessfulChange()
+        public void AccountService_ChangeUserPasswordAsync_SuccessfulChange()
         {
             var loggedInUser = new User
             {
@@ -207,7 +207,7 @@ namespace wheredoyouwanttoeat2.tests.Services
         }
 
         [Fact]
-        public void AccountService_ChangeUserPassword_UnsuccessfulChange()
+        public void AccountService_ChangeUserPasswordAsync_UnsuccessfulChange()
         {
             var loggedInUser = new User
             {
@@ -229,6 +229,96 @@ namespace wheredoyouwanttoeat2.tests.Services
             bool successfulChange = accountService.ChangeUserPasswordAsync("Password123_1", "Password123_2").Result;
 
             Assert.False(successfulChange);
+        }
+
+        [Fact]
+        public void AccountService_DeleteUserAccountAsync_SuccessfulDeletion()
+        {
+            var loggedInUser = new User
+            {
+                Id = "1243435",
+                Name = "Test User",
+                Email = "test@wheredoyouwanttoeat.xyz",
+                UserName = "test@wheredoyouwanttoeat.xyz"
+            };
+
+            var mockRestaurantRepo = Mock.Of<IRepository<Restaurant>>();
+            var mockRestaurantTagRepo = Mock.Of<IRepository<RestaurantTag>>();
+            var mockTagRepo = Mock.Of<IRepository<Tag>>();
+            var mockUserProvider = new MockUserProvider().MockGetLoggedInUserAsync(loggedInUser);
+
+            _mockUserManager.Setup(x => x.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _mockUserManager.Setup(x => x.DeleteAsync(It.IsAny<User>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _mockSignInManager.Setup(x => x.CheckPasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.Success);
+
+            var accountService = new AccountService(_mockUserManager.Object, _mockSignInManager.Object, mockRestaurantRepo, mockRestaurantTagRepo, mockTagRepo, mockUserProvider.Object);
+
+            string successfulDeletion = accountService.DeleteUserAccountAsync("Password123_1").Result;
+
+            Assert.Equal("", successfulDeletion);
+        }
+
+        [Fact]
+        public void AccountService_DeleteUserAccountAsync_InvalidPassword()
+        {
+            var loggedInUser = new User
+            {
+                Id = "1243435",
+                Name = "Test User",
+                Email = "test@wheredoyouwanttoeat.xyz",
+                UserName = "test@wheredoyouwanttoeat.xyz"
+            };
+
+            var mockRestaurantRepo = Mock.Of<IRepository<Restaurant>>();
+            var mockRestaurantTagRepo = Mock.Of<IRepository<RestaurantTag>>();
+            var mockTagRepo = Mock.Of<IRepository<Tag>>();
+            var mockUserProvider = new MockUserProvider().MockGetLoggedInUserAsync(loggedInUser);
+
+            _mockUserManager.Setup(x => x.DeleteAsync(It.IsAny<User>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _mockSignInManager.Setup(x => x.CheckPasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.Failed);
+
+            var accountService = new AccountService(_mockUserManager.Object, _mockSignInManager.Object, mockRestaurantRepo, mockRestaurantTagRepo, mockTagRepo, mockUserProvider.Object);
+
+            string deleteResult = accountService.DeleteUserAccountAsync("Password123_1").Result;
+
+            Assert.Equal("Invalid password", deleteResult);
+        }
+
+        [Fact]
+        public void AccountService_DeleteUserAccountAsync_UnsuccessfulDeletion()
+        {
+            var loggedInUser = new User
+            {
+                Id = "1243435",
+                Name = "Test User",
+                Email = "test@wheredoyouwanttoeat.xyz",
+                UserName = "test@wheredoyouwanttoeat.xyz"
+            };
+
+            var mockRestaurantRepo = Mock.Of<IRepository<Restaurant>>();
+            var mockRestaurantTagRepo = Mock.Of<IRepository<RestaurantTag>>();
+            var mockTagRepo = Mock.Of<IRepository<Tag>>();
+            var mockUserProvider = new MockUserProvider().MockGetLoggedInUserAsync(loggedInUser);
+
+            _mockUserManager.Setup(x => x.DeleteAsync(It.IsAny<User>()))
+                .ReturnsAsync(IdentityResult.Failed());
+
+            _mockSignInManager.Setup(x => x.CheckPasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.Success);
+
+            var accountService = new AccountService(_mockUserManager.Object, _mockSignInManager.Object, mockRestaurantRepo, mockRestaurantTagRepo, mockTagRepo, mockUserProvider.Object);
+
+            string deleteResult = accountService.DeleteUserAccountAsync("Password123_1").Result;
+
+            Assert.Equal("Error deleting account", deleteResult);
         }
     }
 }
