@@ -96,7 +96,7 @@ namespace wheredoyouwanttoeat2.Services
 
             if (!passwordResult.Succeeded)
             {
-                return "Invalid password";
+                return "Incorrect password";
             }
 
             await _signInManager.SignOutAsync();

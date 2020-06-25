@@ -323,8 +323,8 @@ namespace wheredoyouwanttoeat2.Controllers
 
                     switch (errorMessage)
                     {
-                        case "Invalid password":
-                            ModelState.AddModelError(nameof(model.Password), "Invalid password");
+                        case "Incorrect password":
+                            ModelState.AddModelError(nameof(model.Password), "Incorrect password");
                             return View(model);
 
                         case "Error deleting account":

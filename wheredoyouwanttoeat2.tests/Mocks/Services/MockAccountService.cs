@@ -8,7 +8,7 @@ namespace wheredoyouwanttoeat2.tests.Mocks.Services
 {
     public class MockAccountService : Mock<IAccountService>
     {
-        public MockAccountService MockGetUserRestaurants(bool isSuccessful)
+        public MockAccountService MockRegisterUserAsync(bool isSuccessful)
         {
             Setup(x => x.RegisterUserAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(isSuccessful));

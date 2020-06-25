@@ -289,7 +289,7 @@ namespace wheredoyouwanttoeat2.tests.Services
 
             string deleteResult = accountService.DeleteUserAccountAsync("Password123_1").Result;
 
-            Assert.Equal("Invalid password", deleteResult);
+            Assert.Equal("Incorrect password", deleteResult);
         }
 
         [Fact]
