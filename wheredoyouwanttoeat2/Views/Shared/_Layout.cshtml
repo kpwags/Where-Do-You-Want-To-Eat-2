@@ -30,7 +30,14 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
+        <div class="d-none text-center alert alert-info alert-dismissible fade show mb-5" role="alert" id="cookie-popup-alert">
+            <p>This site uses cookies to handle user sessions.<br/>To allow us to provide a better experience, please click the "OK" Button. View our <a href="/privacy-policy">Privacy Policy</a>.</p>
+            <div>
+                <button type="button" class="btn btn-primary" id="dismiss-cookie-popup">OK</button>
+            </div>
+        </div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -49,6 +56,7 @@
             </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
