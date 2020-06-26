@@ -2,9 +2,9 @@ using Moq;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using wheredoyouwanttoeat2.Respositories.Interfaces;
+using WhereDoYouWantToEat2.Respositories.Interfaces;
 
-namespace wheredoyouwanttoeat2.tests.Mocks.Repositories
+namespace WhereDoYouWantToEat2.Tests.Mocks.Repositories
 {
     public class MockRepository<T> : Mock<IRepository<T>> where T : class
     {

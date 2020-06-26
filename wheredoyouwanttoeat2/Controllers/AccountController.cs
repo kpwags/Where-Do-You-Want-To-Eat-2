@@ -1,16 +1,15 @@
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using wheredoyouwanttoeat2.Models;
+using WhereDoYouWantToEat2.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using wheredoyouwanttoeat2.Services.Interfaces;
+using WhereDoYouWantToEat2.Services.Interfaces;
 using System;
 
-namespace wheredoyouwanttoeat2.Controllers
+namespace WhereDoYouWantToEat2.Controllers
 {
     [Authorize]
     public class AccountController : Controller

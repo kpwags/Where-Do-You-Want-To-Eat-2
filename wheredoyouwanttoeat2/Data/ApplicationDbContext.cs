@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using wheredoyouwanttoeat2.Models;
+using WhereDoYouWantToEat2.Models;
 
-namespace wheredoyouwanttoeat2.Data
+namespace WhereDoYouWantToEat2.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {

@@ -1,4 +1,4 @@
-namespace wheredoyouwanttoeat2.Classes.DownloadData
+namespace WhereDoYouWantToEat2.Classes.DownloadData
 {
     public class User
     {

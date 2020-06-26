@@ -1,4 +1,4 @@
-namespace wheredoyouwanttoeat2.Classes
+namespace WhereDoYouWantToEat2.Classes
 {
     public sealed class AppSettings
     {

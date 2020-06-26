@@ -1,18 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using wheredoyouwanttoeat2.Data;
-using wheredoyouwanttoeat2.ViewModel;
-using wheredoyouwanttoeat2.Models;
-using Microsoft.Extensions.Logging;
-using wheredoyouwanttoeat2.Classes;
-using wheredoyouwanttoeat2.Services.Interfaces;
+using WhereDoYouWantToEat2.ViewModel;
+using WhereDoYouWantToEat2.Models;
+using WhereDoYouWantToEat2.Classes;
+using WhereDoYouWantToEat2.Services.Interfaces;
 
-namespace wheredoyouwanttoeat2.Controllers
+namespace WhereDoYouWantToEat2.Controllers
 {
     public class HomeController : BaseController
     {

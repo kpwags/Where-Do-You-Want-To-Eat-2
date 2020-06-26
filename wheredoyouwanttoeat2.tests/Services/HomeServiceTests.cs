@@ -1,15 +1,15 @@
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
-using wheredoyouwanttoeat2.Models;
-using wheredoyouwanttoeat2.Respositories.Interfaces;
-using wheredoyouwanttoeat2.Services;
-using wheredoyouwanttoeat2.tests.Mocks.Repositories;
-using wheredoyouwanttoeat2.tests.Mocks.Services;
+using WhereDoYouWantToEat2.Models;
+using WhereDoYouWantToEat2.Respositories.Interfaces;
+using WhereDoYouWantToEat2.Services;
+using WhereDoYouWantToEat2.Tests.Mocks.Repositories;
+using WhereDoYouWantToEat2.Tests.Mocks.Services;
 using Xunit;
 
 
-namespace wheredoyouwanttoeat2.tests.Services
+namespace WhereDoYouWantToEat2.Tests.Services
 {
     public class HomeServiceTests
     {

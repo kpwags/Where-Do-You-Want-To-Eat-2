@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using wheredoyouwanttoeat2.Data;
+using WhereDoYouWantToEat2.Data;
 
-namespace wheredoyouwanttoeat2.Data.Migrations
+namespace WhereDoYouWantToEat2.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20200522225449_LongAndLat")]
@@ -146,7 +146,7 @@ namespace wheredoyouwanttoeat2.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("wheredoyouwanttoeat2.Models.Restaurant", b =>
+            modelBuilder.Entity("WhereDoYouWantToEat2.Models.Restaurant", b =>
                 {
                     b.Property<int>("RestaurantId")
                         .ValueGeneratedOnAdd()
@@ -202,7 +202,7 @@ namespace wheredoyouwanttoeat2.Data.Migrations
                     b.ToTable("Restaurants");
                 });
 
-            modelBuilder.Entity("wheredoyouwanttoeat2.Models.RestaurantTag", b =>
+            modelBuilder.Entity("WhereDoYouWantToEat2.Models.RestaurantTag", b =>
                 {
                     b.Property<int>("RestaurantId")
                         .HasColumnType("INTEGER");
@@ -217,7 +217,7 @@ namespace wheredoyouwanttoeat2.Data.Migrations
                     b.ToTable("RestaurantTags");
                 });
 
-            modelBuilder.Entity("wheredoyouwanttoeat2.Models.Tag", b =>
+            modelBuilder.Entity("WhereDoYouWantToEat2.Models.Tag", b =>
                 {
                     b.Property<int>("TagId")
                         .ValueGeneratedOnAdd()
@@ -232,7 +232,7 @@ namespace wheredoyouwanttoeat2.Data.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("wheredoyouwanttoeat2.Models.User", b =>
+            modelBuilder.Entity("WhereDoYouWantToEat2.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -310,7 +310,7 @@ namespace wheredoyouwanttoeat2.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("wheredoyouwanttoeat2.Models.User", null)
+                    b.HasOne("WhereDoYouWantToEat2.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -319,7 +319,7 @@ namespace wheredoyouwanttoeat2.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("wheredoyouwanttoeat2.Models.User", null)
+                    b.HasOne("WhereDoYouWantToEat2.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -334,7 +334,7 @@ namespace wheredoyouwanttoeat2.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("wheredoyouwanttoeat2.Models.User", null)
+                    b.HasOne("WhereDoYouWantToEat2.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -343,29 +343,29 @@ namespace wheredoyouwanttoeat2.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("wheredoyouwanttoeat2.Models.User", null)
+                    b.HasOne("WhereDoYouWantToEat2.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("wheredoyouwanttoeat2.Models.Restaurant", b =>
+            modelBuilder.Entity("WhereDoYouWantToEat2.Models.Restaurant", b =>
                 {
-                    b.HasOne("wheredoyouwanttoeat2.Models.User", "User")
+                    b.HasOne("WhereDoYouWantToEat2.Models.User", "User")
                         .WithMany("Restaurants")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("wheredoyouwanttoeat2.Models.RestaurantTag", b =>
+            modelBuilder.Entity("WhereDoYouWantToEat2.Models.RestaurantTag", b =>
                 {
-                    b.HasOne("wheredoyouwanttoeat2.Models.Restaurant", "Restaurant")
+                    b.HasOne("WhereDoYouWantToEat2.Models.Restaurant", "Restaurant")
                         .WithMany("RestaurantTags")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("wheredoyouwanttoeat2.Models.Tag", "Tag")
+                    b.HasOne("WhereDoYouWantToEat2.Models.Tag", "Tag")
                         .WithMany("RestaurantTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using wheredoyouwanttoeat2.Models;
+using WhereDoYouWantToEat2.Models;
 
-namespace wheredoyouwanttoeat2.ViewModel
+namespace WhereDoYouWantToEat2.ViewModel
 {
     public class RestaurantAdmin : BaseViewModel
     {

@@ -9,18 +9,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using wheredoyouwanttoeat2.Data;
+using WhereDoYouWantToEat2.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using wheredoyouwanttoeat2.Models;
-using wheredoyouwanttoeat2.Classes;
-using wheredoyouwanttoeat2.Services;
-using wheredoyouwanttoeat2.Services.Interfaces;
-using wheredoyouwanttoeat2.Respositories;
-using wheredoyouwanttoeat2.Respositories.Interfaces;
+using WhereDoYouWantToEat2.Models;
+using WhereDoYouWantToEat2.Classes;
+using WhereDoYouWantToEat2.Services;
+using WhereDoYouWantToEat2.Services.Interfaces;
+using WhereDoYouWantToEat2.Respositories;
+using WhereDoYouWantToEat2.Respositories.Interfaces;
 
-namespace wheredoyouwanttoeat2
+namespace WhereDoYouWantToEat2
 {
     public class Startup
     {

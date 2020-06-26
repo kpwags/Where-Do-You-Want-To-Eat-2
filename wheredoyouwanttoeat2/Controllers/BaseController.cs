@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using wheredoyouwanttoeat2.Services.Interfaces;
+using WhereDoYouWantToEat2.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace wheredoyouwanttoeat2.Controllers
+namespace WhereDoYouWantToEat2.Controllers
 {
     public class BaseController : Controller
     {

@@ -1,6 +1,4 @@
-using System;
-
-namespace wheredoyouwanttoeat2.Models
+namespace WhereDoYouWantToEat2.Models
 {
     public class ErrorViewModel
     {
