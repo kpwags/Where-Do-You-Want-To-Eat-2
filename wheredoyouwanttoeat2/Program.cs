@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace wheredoyouwanttoeat2
+namespace WhereDoYouWantToEat2
 {
     public class Program
     {

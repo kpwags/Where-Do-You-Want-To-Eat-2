@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using wheredoyouwanttoeat2.Data;
-using wheredoyouwanttoeat2.Models;
-using wheredoyouwanttoeat2.Respositories.Interfaces;
+using WhereDoYouWantToEat2.Data;
+using WhereDoYouWantToEat2.Models;
+using WhereDoYouWantToEat2.Respositories.Interfaces;
 
-namespace wheredoyouwanttoeat2.Respositories
+namespace WhereDoYouWantToEat2.Respositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {

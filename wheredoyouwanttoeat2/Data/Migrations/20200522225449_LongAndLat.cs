@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace wheredoyouwanttoeat2.Data.Migrations
+namespace WhereDoYouWantToEat2.Data.Migrations
 {
     public partial class LongAndLat : Migration
     {

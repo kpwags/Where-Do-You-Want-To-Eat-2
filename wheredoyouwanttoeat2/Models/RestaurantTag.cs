@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace wheredoyouwanttoeat2.Models
+namespace WhereDoYouWantToEat2.Models
 {
     public class RestaurantTag
     {

@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using wheredoyouwanttoeat2.Services.Interfaces;
-using wheredoyouwanttoeat2.Respositories.Interfaces;
-using wheredoyouwanttoeat2.Models;
-using wheredoyouwanttoeat2.Classes;
+using WhereDoYouWantToEat2.Services.Interfaces;
+using WhereDoYouWantToEat2.Respositories.Interfaces;
+using WhereDoYouWantToEat2.Models;
+using WhereDoYouWantToEat2.Classes;
 
-namespace wheredoyouwanttoeat2.Services
+namespace WhereDoYouWantToEat2.Services
 {
     public class AdminService : IAdminService
     {

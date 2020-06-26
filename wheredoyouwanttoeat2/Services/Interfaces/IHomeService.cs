@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using wheredoyouwanttoeat2.Models;
+using WhereDoYouWantToEat2.Models;
 
-namespace wheredoyouwanttoeat2.Services.Interfaces
+namespace WhereDoYouWantToEat2.Services.Interfaces
 {
     public interface IHomeService
     {

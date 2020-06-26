@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using wheredoyouwanttoeat2.Classes;
-using wheredoyouwanttoeat2.Services.Interfaces;
-using wheredoyouwanttoeat2.Models;
+using WhereDoYouWantToEat2.Classes;
+using WhereDoYouWantToEat2.Services.Interfaces;
+using WhereDoYouWantToEat2.Models;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace wheredoyouwanttoeat2.Controllers
+namespace WhereDoYouWantToEat2.Controllers
 {
     [Authorize]
     public class AdminController : BaseController

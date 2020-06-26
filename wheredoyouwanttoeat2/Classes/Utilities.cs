@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 
-namespace wheredoyouwanttoeat2.Classes
+namespace WhereDoYouWantToEat2.Classes
 {
     public static class Utilities
     {

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using wheredoyouwanttoeat2.Models;
+using WhereDoYouWantToEat2.Models;
 
-namespace wheredoyouwanttoeat2.Services.Interfaces
+namespace WhereDoYouWantToEat2.Services.Interfaces
 {
     public interface IAccountService
     {

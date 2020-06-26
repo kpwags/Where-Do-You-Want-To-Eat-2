@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using wheredoyouwanttoeat2.Models;
-using wheredoyouwanttoeat2.Respositories.Interfaces;
-using wheredoyouwanttoeat2.Services.Interfaces;
+using WhereDoYouWantToEat2.Models;
+using WhereDoYouWantToEat2.Respositories.Interfaces;
+using WhereDoYouWantToEat2.Services.Interfaces;
 
-namespace wheredoyouwanttoeat2.Services
+namespace WhereDoYouWantToEat2.Services
 {
     public class AccountService : IAccountService
     {

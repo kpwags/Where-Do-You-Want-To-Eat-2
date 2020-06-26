@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
-using wheredoyouwanttoeat2.Models;
-using wheredoyouwanttoeat2.Services.Interfaces;
+using WhereDoYouWantToEat2.Models;
+using WhereDoYouWantToEat2.Services.Interfaces;
 
-namespace wheredoyouwanttoeat2.Services
+namespace WhereDoYouWantToEat2.Services
 {
     public class UserProvider : IUserProvider
     {

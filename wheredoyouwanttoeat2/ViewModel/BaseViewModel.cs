@@ -1,4 +1,4 @@
-namespace wheredoyouwanttoeat2.ViewModel
+namespace WhereDoYouWantToEat2.ViewModel
 {
     public class BaseViewModel
     {

@@ -1,11 +1,11 @@
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using wheredoyouwanttoeat2.Models;
-using wheredoyouwanttoeat2.Services.Interfaces;
+using WhereDoYouWantToEat2.Models;
+using WhereDoYouWantToEat2.Services.Interfaces;
 
 
-namespace wheredoyouwanttoeat2.tests.Mocks.Services
+namespace WhereDoYouWantToEat2.Tests.Mocks.Services
 {
     public class MockUserProvider : Mock<IUserProvider>
     {

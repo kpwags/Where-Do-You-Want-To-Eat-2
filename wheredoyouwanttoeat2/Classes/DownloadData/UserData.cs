@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 using System.Text.Json;
 using System.IO;
 
-namespace wheredoyouwanttoeat2.Classes.DownloadData
+namespace WhereDoYouWantToEat2.Classes.DownloadData
 {
     public class UserData
     {

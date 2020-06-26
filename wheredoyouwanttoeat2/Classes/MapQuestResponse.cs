@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace wheredoyouwanttoeat2.Classes
+namespace WhereDoYouWantToEat2.Classes
 {
     public class MapQuestResponse
     {

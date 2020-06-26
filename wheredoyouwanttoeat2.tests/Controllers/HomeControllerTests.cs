@@ -5,14 +5,14 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using wheredoyouwanttoeat2.Classes;
-using wheredoyouwanttoeat2.Controllers;
-using wheredoyouwanttoeat2.Models;
-using wheredoyouwanttoeat2.Services.Interfaces;
-using wheredoyouwanttoeat2.tests.Mocks.Services;
+using WhereDoYouWantToEat2.Classes;
+using WhereDoYouWantToEat2.Controllers;
+using WhereDoYouWantToEat2.Models;
+using WhereDoYouWantToEat2.Services.Interfaces;
+using WhereDoYouWantToEat2.Tests.Mocks.Services;
 using Xunit;
 
-namespace wheredoyouwanttoeat2.tests.Controllers
+namespace WhereDoYouWantToEat2.Tests.Controllers
 {
     public class HomeControllerTests
     {
