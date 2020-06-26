@@ -22,6 +22,22 @@ namespace wheredoyouwanttoeat2.tests.Services
         };
 
         [Fact]
+        public void AdminService_GetUserRestaurants_ReturnsList()
+        {
+            var mockRestaurantRepo = new MockRepository<Restaurant>().MockGet(restaurants.AsQueryable());
+            var mockRestaurantTagRepo = Mock.Of<IRepository<RestaurantTag>>();
+            var mockTagRepo = Mock.Of<IRepository<Tag>>();
+            var mockUserProvider = Mock.Of<IUserProvider>();
+
+            var adminService = new AdminService(mockRestaurantRepo.Object, mockRestaurantTagRepo, mockTagRepo, mockUserProvider);
+
+            var result = adminService.GetUserRestaurants();
+
+            Assert.IsType<List<Restaurant>>(result.ToList());
+            Assert.Equal(5, result.Count());
+        }
+
+        [Fact]
         public void AdminService_GetRestaurantById_ReturnsResult()
         {
             var singleRestaurant = new Restaurant

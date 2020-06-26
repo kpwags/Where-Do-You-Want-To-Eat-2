@@ -48,7 +48,7 @@ namespace wheredoyouwanttoeat2.Services
                 userId = _userProvider.GetUserId();
             }
 
-            return _restaurantTagRepository.Get(rt => tags.Contains(rt.TagId)).Select(rt => rt.Restaurant);
+            return _restaurantTagRepository.Get(rt => tags.Contains(rt.TagId) && rt.Restaurant.UserId == userId).Select(rt => rt.Restaurant);
         }
     }
 }

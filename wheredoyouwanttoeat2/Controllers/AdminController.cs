@@ -22,13 +22,15 @@ namespace wheredoyouwanttoeat2.Controllers
         }
 
         [Route("/admin/restaurants")]
-        public IActionResult Restaurants()
+        public async Task<IActionResult> Restaurants()
         {
             try
             {
+                var loggedInUser = await _userProvider.GetLoggedInUserAsync();
+
                 var model = new ViewModel.RestaurantAdmin
                 {
-                    Restaurants = _service.GetUserRestaurants().OrderBy(r => r.Name).ToList()
+                    Restaurants = _service.GetUserRestaurants(loggedInUser.Id).OrderBy(r => r.Name).ToList()
                 };
 
                 if (TempData["errormessage"] != null)
