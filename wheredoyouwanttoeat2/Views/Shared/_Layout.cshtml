@@ -13,13 +13,35 @@
     }
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+
+    <link rel="apple-touch-icon" sizes="57x57" href="~/icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/icons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="~/icons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/icons/favicon-16x16.png">
+    <link rel="manifest" href="~/icons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="~/icons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
     @RenderSection("Styles", required: false)
 </head>
 <body>
     <header>
         <nav class="navbar navbar-dark bg-primary navbar-expand-lg navbar-toggleable-lg border-bottom box-shadow mb-3" style="background-color:#0366d6 !important">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Where Do You Want to Eat?</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/logo.png" width="36" height="39" class="d-inline-block align-middle" alt="Where Do You Want to Eat Logo">
+                    <span class="pl-2">Where Do You Want to Eat?</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
