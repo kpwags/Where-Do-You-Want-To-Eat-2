@@ -87,6 +87,14 @@ header ul li {
     vertical-align: middle;
 }
 
+/* Accessibility Contrast Fixes
+-------------------------------------------------- */
+
+.list-group-item.active {
+    border-color: #0366d6;
+    background-color: #0366d6;
+}
+
 /* Form Support
 -------------------------------------------------- */
 
@@ -114,7 +122,7 @@ form.randomizer .form-check {
     line-height: 1;
 }
 
-/* Sticky footer styles
+/* Map Support
 -------------------------------------------------- */
 #restaurantmap {
     height: 400px;
