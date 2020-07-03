@@ -31,3 +31,6 @@ app.db
 *.db-wal
 Logs
 .DS_Store
+azure_setup.json
+publish
+settings.json
