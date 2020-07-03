@@ -40,8 +40,10 @@ namespace WhereDoYouWantToEat2.Models
         [Display(Name = "Menu")]
         public string Menu { get; set; }
 
+        [Column(TypeName = "decimal(18,6)")]
         public decimal Latitude { get; set; }
 
+        [Column(TypeName = "decimal(18,6)")]
         public decimal Longitude { get; set; }
 
         public string UserId { get; set; }

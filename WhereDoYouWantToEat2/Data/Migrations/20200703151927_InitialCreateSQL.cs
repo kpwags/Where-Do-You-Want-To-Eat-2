@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace WhereDoYouWantToEat2.Data.Migrations
+namespace wheredoyouwanttoeat2.Data.Migrations.SqlServerMigrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class InitialCreateSQL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +39,8 @@ namespace WhereDoYouWantToEat2.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,11 +48,24 @@ namespace WhereDoYouWantToEat2.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    TagId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.TagId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -72,7 +86,7 @@ namespace WhereDoYouWantToEat2.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -92,8 +106,8 @@ namespace WhereDoYouWantToEat2.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -137,8 +151,8 @@ namespace WhereDoYouWantToEat2.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -152,6 +166,60 @@ namespace WhereDoYouWantToEat2.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Restaurants",
+                columns: table => new
+                {
+                    RestaurantId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 255, nullable: false),
+                    AddressLine1 = table.Column<string>(maxLength: 255, nullable: true),
+                    AddressLine2 = table.Column<string>(maxLength: 255, nullable: true),
+                    City = table.Column<string>(maxLength: 255, nullable: true),
+                    State = table.Column<string>(maxLength: 2, nullable: true),
+                    ZipCode = table.Column<string>(maxLength: 10, nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    Website = table.Column<string>(nullable: true),
+                    Menu = table.Column<string>(nullable: true),
+                    Latitude = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    Longitude = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Restaurants", x => x.RestaurantId);
+                    table.ForeignKey(
+                        name: "FK_Restaurants_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RestaurantTags",
+                columns: table => new
+                {
+                    RestaurantId = table.Column<int>(nullable: false),
+                    TagId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RestaurantTags", x => new { x.RestaurantId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_RestaurantTags_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "RestaurantId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RestaurantTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "TagId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -161,7 +229,8 @@ namespace WhereDoYouWantToEat2.Data.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -187,7 +256,18 @@ namespace WhereDoYouWantToEat2.Data.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Restaurants_UserId",
+                table: "Restaurants",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RestaurantTags_TagId",
+                table: "RestaurantTags",
+                column: "TagId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -208,7 +288,16 @@ namespace WhereDoYouWantToEat2.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "RestaurantTags");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Restaurants");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
