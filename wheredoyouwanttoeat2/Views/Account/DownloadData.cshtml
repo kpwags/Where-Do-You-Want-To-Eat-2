@@ -20,17 +20,18 @@
         <partial name="_ErrorMessage" model="@Model.ErrorMessage" />
 
         <div class="mt-4">
-            <p class="h5">Please Choose Your Preferred Data Format</p>
-
             <div class="form-group">
-                @foreach (var format in DataFormats)
-                {
-                    <div class="form-check mt-3">
-                        <input class="form-check-input" type="radio" asp-for="DataFormat" value="@format" id="data-format-@format" name="data-format-@format" />
-                        <label class="form-check-label" for="data-format-@format">@format</label>
-                    </div>
-                }
-                <div asp-validation-for="DataFormat" class="text-danger mt-3" id="data-format-error"></div>
+                <fieldset>
+                    <legend>Please Choose Your Preferred Data Format:</legend>
+                    @foreach (var format in DataFormats)
+                    {
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" asp-for="DataFormat" value="@format" id="data-format-@format" name="DataFormat" />
+                            <label class="form-check-label" for="data-format-@format">@format</label>
+                        </div>
+                    }
+                    <div asp-validation-for="DataFormat" class="text-danger mt-3" id="data-format-error"></div>
+                </fieldset>
             </div>
 
             <div class="form-group mt-4">
