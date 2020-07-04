@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using WhereDoYouWantToEat2.Data;
