@@ -10,7 +10,7 @@ Google changed their API and started charging for it (which is completely fair, 
 
 ## What This Is
 
-This is the source code for [Where Do You Want To Eat?](https://wheredoyouwanttoeat.xyz). Where Do You Want to Eat is a web app that chooses where you go out to eat. We've all been there with friends and/or family. Trying to find a place to go and no one can decide or agree. This web app allows you to create an account, add restaurants, tag them, and let it choose where to go grab food.
+This is the source code for [Where Do You Want To Eat?](https://www.wheredoyouwanttoeat.xyz). Where Do You Want to Eat is a web app that chooses where you go out to eat. We've all been there with friends and/or family. Trying to find a place to go and no one can decide or agree. This web app allows you to create an account, add restaurants, tag them, and let it choose where to go grab food.
 
 ## Technologies Used
 
