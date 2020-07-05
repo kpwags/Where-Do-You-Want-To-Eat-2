@@ -36,7 +36,23 @@ namespace WhereDoYouWantToEat2.Services
 
         public Restaurant GetRestaurantById(int id)
         {
-            return _restaurantRepository.GetById(id);
+            var restaurant = _restaurantRepository.GetById(id);
+
+            if (restaurant == null)
+            {
+                return null;
+            }
+
+            if (restaurant.RestaurantTags.Count() > 0)
+            {
+                restaurant.TagString = string.Join(", ", restaurant.RestaurantTags.Select(rt => rt.Tag.Name).ToList());
+            }
+            else
+            {
+                restaurant.TagString = "";
+            }
+
+            return restaurant;
         }
 
         public async Task<Restaurant> AddRestaurant(Restaurant restaurant)

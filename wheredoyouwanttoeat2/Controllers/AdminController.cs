@@ -136,16 +136,6 @@ namespace WhereDoYouWantToEat2.Controllers
 
             if (restaurant != null)
             {
-                try
-                {
-                    restaurant.TagString = string.Join(',', _service.GetRestaurantTags(id).Select(rt => rt.Tag.Name).ToList());
-                }
-                catch (Exception ex)
-                {
-                    restaurant.TagString = string.Empty;
-                    _logger.LogError(ex, "Error generating tag string");
-                }
-
                 return View(restaurant);
             }
 
