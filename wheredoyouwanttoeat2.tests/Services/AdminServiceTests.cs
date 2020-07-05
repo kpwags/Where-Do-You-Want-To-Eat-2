@@ -47,7 +47,8 @@ namespace WhereDoYouWantToEat2.Tests.Services
                 PhoneNumber = "215.666.5543",
                 Website = "https://www.fakerestaurant.com",
                 Latitude = 0,
-                Longitude = 0
+                Longitude = 0,
+                RestaurantTags = new List<RestaurantTag>()
             };
 
             var restaurants = new List<Restaurant>();
