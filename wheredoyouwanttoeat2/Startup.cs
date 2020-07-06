@@ -78,15 +78,11 @@ namespace WhereDoYouWantToEat2
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-
-                app.UseRewriter(new RewriteOptions()
-                    // redirect non www to www.
-                    .AddRedirectToWwwPermanent()
-
-                    // While we are at it, let's also redirect http to https.
-                    .AddRedirectToHttpsPermanent()
-                );
             }
+
+            var rewriterOptions = new RewriteOptions().AddRedirectToHttpsPermanent().AddRedirectToWwwPermanent();
+            app.UseRewriter(rewriterOptions);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
