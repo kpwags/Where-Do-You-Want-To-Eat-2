@@ -71,13 +71,12 @@ header ul li {
 .footer {
     margin: 35px 0 15px 0;
     width: 100%;
-    white-space: nowrap;
     line-height: 60px; /* Vertically center the text there */
 }
 
 .footer ul li {
-    display: inline;
-    padding: 0 12px;
+    display: inline-block;
+    margin: 0 12px;
 }
 
 /* Table overrides
@@ -129,12 +128,22 @@ form.randomizer .form-check {
 }
 
 @media (max-width: 768px) {
-    footer {
+    .footer {
         text-align: center;
     }
 
-    footer ul {
+    .footer ul {
         padding-left: 0;
         line-height: normal;
+    }
+
+    .footer ul li {
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 700px) {
+    .footer ul li {
+        margin: 0 18px 12px 18px
     }
 }

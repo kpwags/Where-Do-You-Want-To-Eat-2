@@ -164,6 +164,12 @@ namespace WhereDoYouWantToEat2.Controllers
             return View();
         }
 
+        [Route("terms")]
+        public IActionResult Terms()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
